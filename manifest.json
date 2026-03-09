@@ -1,0 +1,22 @@
+
+{
+  "name": "Pizzaria Barcellos",
+  "short_name": "Barcellos",
+  "description": "Peça a melhor pizza de Linhares - ES",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#1B431D",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=192&h=192&fit=crop",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=512&h=512&fit=crop",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

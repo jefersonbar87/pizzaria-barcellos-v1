@@ -1,0 +1,7 @@
+{
+  "name": "Pizzaria Barcellos",
+  "description": "Sistema completo de delivery para a Pizzaria Barcellos com cardápio dinâmico, checkout via WhatsApp e painel administrativo oculto.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
