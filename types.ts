@@ -15,6 +15,7 @@ export interface Product {
   image: string;
   available: boolean;
   enabledSizes?: PizzaSize[]; // Explicit control over which sizes are shown
+  stock?: number; 
 }
 
 export interface CartItem {
@@ -78,4 +79,7 @@ export interface AppSettings {
   whatsappIcon?: string;
   instagramIcon?: string;
   promotion: Promotion;
+  producedBy?: string;            // Para 'Produzido por JefTecnologias'
+  registeredTrademark?: string;   // Para 'Marca Registrada' ou 'Todos os direitos reservados'
+  stock?: number; // 👈 Adicione isso! O '?' indica que é opcional (pizzas não precisam de estoque fixo)
 }

@@ -4,7 +4,6 @@ import { INITIAL_PRODUCTS, INITIAL_SETTINGS, CONTACT_WHATSAPP, INSTAGRAM_URL } f
 import AdminDashboard from './components/AdminDashboard';
 import MenuList from './components/MenuList';
 import CartModal from './components/CartModal';
-import { supabase } from './lib/supabase';
 import { ShoppingCart, Instagram, MapPin, Search, CheckCircle2, MessageCircle, ArrowLeft, Mail, Lock, Pizza } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -77,7 +76,7 @@ useEffect(() => {
     try {
       // Tentativa de banco silenciosa
       try {
-        await supabase.from('pizzaria_orders').insert([newOrder]);
+        
         setOrders(prev => [newOrder as Order, ...prev]);
     } catch (e) { console.log("Erro banco ignorado"); }
 
@@ -193,19 +192,6 @@ const itemsText = orderData.items?.map(item => {
           </p>
         </div>
       </div>
-    );
-  }
-
-  if (isAdmin && isLoggedIn && !isOrderingAsAdmin) {
-    return (
-      <AdminDashboard 
-        products={products} orders={orders} settings={settings} 
-        onSaveProduct={async (p) => { await supabase.from('pizzaria_products').upsert(p); }}
-        onDeleteProduct={async (id) => { await supabase.from('pizzaria_products').delete().eq('id', id); }}
-        onSaveSettings={async (s) => { await supabase.from('pizzaria_settings').upsert({ id: 'config', data: s }); setSettings(s); }}
-        onLogout={() => { setIsLoggedIn(false); setIsAdmin(false); }}
-        onStartOrdering={() => setIsOrderingAsAdmin(true)}
-      />
     );
   }
 

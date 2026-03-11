@@ -18,8 +18,11 @@ const MenuList: React.FC<MenuListProps> = ({ products, onAddToCart, isOpen, prom
   const categories: ('Pizza' | 'Bebida')[] = ['Pizza', 'Bebida'];
   const [activeCategory, setActiveCategory] = useState<'Pizza' | 'Bebida'>('Pizza');
 
-  const handleOpenModal = (p: Product) => {
-    if (!isOpen) return;
+const handleOpenModal = (p: Product) => {
+    // AQUI: Agora ele bloqueia se a loja estiver fechada, 
+    // se o produto estiver desativado OU se o estoque for ZERO
+    if (!isOpen || !p.available || p.stock === 0) return; 
+    
     setSelectedProduct(p);
     setHalfProduct(null);
     setSize('Grande');
@@ -169,24 +172,63 @@ const MenuList: React.FC<MenuListProps> = ({ products, onAddToCart, isOpen, prom
                 onClick={() => handleOpenModal(product)}
                 className={`flex bg-zinc-950/70 border border-zinc-800 rounded-3xl overflow-hidden hover:border-red-600/50 transition duration-300 group cursor-pointer ${(!isOpen || !product.available) && 'opacity-70 grayscale-50'}`}
               >
-                <div className="w-1/3 aspect-square overflow-hidden relative">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition duration-500" />
+<div className="w-1/3 aspect-square overflow-hidden relative">
+                  {/* IMAGEM: Agora escurece se available for false OU se o estoque for 0 */}
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className={`w-full h-full object-cover group-hover:scale-110 transition duration-500 ${(!product.available || product.stock === 0) ? 'opacity-30 grayscale' : ''}`} 
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                  {/* FAIXA DIAGONAL: Agora aparece se available for false OU se o estoque for 0 */}
+                  {(!product.available || product.stock === 0) && (
+                    <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+                      <div className="bg-red-600 text-white text-[9px] font-black uppercase py-1 w-[150%] text-center shadow-xl transform -rotate-45 translate-y-[-10px] translate-x-[-10px]">
+                        ESGOTADO
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="p-5 flex flex-col justify-between w-2/3">
+
+<div className="p-5 flex flex-col justify-between w-2/3">
                   <div>
-                    <h4 className="font-bold text-lg leading-tight mb-1 group-hover:text-red-500 transition uppercase">{product.name}</h4>
-                    <p className="text-zinc-500 text-xs line-clamp-2 leading-relaxed">{product.description}</p>
-                    {!product.available && <span className="text-[10px] bg-red-600/20 text-red-500 px-2 py-0.5 rounded-full font-bold uppercase mt-1 inline-block">Indisponível</span>}
+                    {/* O NOME: Fica cinza se acabar o estoque ou estiver desativado */}
+                    <h4 className={`font-bold text-lg leading-tight mb-1 transition uppercase ${(!product.available || product.stock === 0) ? 'text-zinc-600' : 'group-hover:text-red-500 text-white'}`}>
+                      {product.name}
+                    </h4>
+                    
+                    <p className="text-zinc-500 text-xs line-clamp-2 leading-relaxed">
+                      {product.description}
+                    </p>
+
+                    {/* AVISO DE ESTOQUE BAIXO */}
+                    {product.stock !== undefined && product.stock > 0 && product.stock <= 3 && (
+                      <div className="mt-2 flex items-center gap-1.5 animate-pulse">
+                        <div className="h-1.5 w-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]"></div>
+                        <span className="text-[10px] text-amber-500 font-black uppercase tracking-wider">
+                          Apenas {product.stock} unidades!
+                        </span>
+                      </div>
+                    )}
                   </div>
+
                   <div className="flex justify-between items-end mt-2">
-                    <span className="text-red-500 font-bold text-lg">
-                    {product.category === 'Bebida' 
-                    ? `R$ ${product.priceFixed?.toFixed(2)}` 
-                    : `A partir de R$ ${product.priceM?.toFixed(2)}`}
-                  </span>
-                    <button className={`p-2 rounded-xl text-white shadow-lg transition active:scale-90 ${isOpen ? 'bg-red-600 hover:bg-red-700 shadow-red-600/20' : 'bg-zinc-800 cursor-not-allowed'}`}>
-                      {isOpen ? <Plus size={20} /> : <Lock size={18} />}
+                    <span className={`font-bold text-lg ${(!product.available || product.stock === 0) ? 'text-zinc-700' : 'text-red-500'}`}>
+                      {product.category === 'Bebida' 
+                        ? `R$ ${product.priceFixed?.toFixed(2).replace('.', ',')}` 
+                        : `A partir de R$ ${product.priceM?.toFixed(2).replace('.', ',')}`}
+                    </span>
+                    
+                    {/* BOTÃO ÚNICO E CORRIGIDO */}
+                    <button 
+                      className={`p-2 rounded-xl text-white shadow-lg transition active:scale-90 ${
+                        (isOpen && product.available && (product.stock === undefined || product.stock > 0)) 
+                        ? 'bg-red-600 hover:bg-red-700 shadow-red-600/20' 
+                        : 'bg-zinc-800 cursor-not-allowed opacity-50'
+                      }`}
+                    >
+                      {(isOpen && product.available && (product.stock === undefined || product.stock > 0)) ? <Plus size={20} /> : <Lock size={18} />}
                     </button>
                   </div>
                 </div>
@@ -195,141 +237,136 @@ const MenuList: React.FC<MenuListProps> = ({ products, onAddToCart, isOpen, prom
         </div>
       </section>
 
-      {/* Modal Section (Mantenha o restante como está para não quebrar a lógica) */}
+{/* Modal Section (Ajuste de tamanho compacto - Lógica mantida 100%) */}
       {selectedProduct && isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-          <div className="bg-zinc-900 border border-zinc-800 w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
-            {/* Container da Imagem da Pizza */}
-<div className="relative h-48 sm:h-64 overflow-hidden bg-zinc-950">
-  {/* PIZZA 1 (Lado Esquerdo ou Inteira) */}
-  <img 
-    src={selectedProduct.image} 
-    className="absolute inset-0 w-full h-full object-cover transition-all duration-500" 
-    alt="Lado 1"
-  />
+          <div className="bg-zinc-900 border border-zinc-800 w-full max-w-md rounded-[2rem] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+            {/* Imagem com altura reduzida: de h-48/64 para h-40/48 */}
+            <div className="relative h-40 sm:h-48 overflow-hidden bg-zinc-950">
+              <img 
+                src={selectedProduct.image} 
+                className="absolute inset-0 w-full h-full object-cover transition-all duration-500" 
+                alt="Lado 1"
+              />
 
-  {/* PIZZA 2 (Aparece apenas se houver Meio a Meio selecionado) */}
-  {halfProduct && (
-    <img 
-      src={halfProduct.image} 
-      className="absolute inset-0 w-full h-full object-cover transition-all duration-500 animate-in fade-in slide-in-from-right-10"
-      style={{ clipPath: 'inset(0 0 0 50%)' }} // Este é o segredo: corta metade da imagem!
-      alt="Lado 2"
-    />
-  )}
-  
-  {/* Divisória sutil no meio para dar realismo */}
-  {halfProduct && (
-    <div className="absolute inset-y-0 left-1/2 w-px bg-white/20 shadow-[0_0_10px_rgba(255,255,255,0.5)] z-10" />
-  )}
+              {halfProduct && (
+                <img 
+                  src={halfProduct.image} 
+                  className="absolute inset-0 w-full h-full object-cover transition-all duration-500 animate-in fade-in slide-in-from-right-10"
+                  style={{ clipPath: 'inset(0 0 0 50%)' }} 
+                  alt="Lado 2"
+                />
+              )}
+              
+              {halfProduct && (
+                <div className="absolute inset-y-0 left-1/2 w-px bg-white/20 shadow-[0_0_10px_rgba(255,255,255,0.5)] z-10" />
+              )}
 
-  <button 
-    onClick={() => setSelectedProduct(null)}
-    className="absolute top-4 right-4 bg-black/60 p-2 rounded-full hover:bg-red-600 transition z-20"
-  >
-    <X size={24} />
-  </button>
-</div>
+              <button 
+                onClick={() => setSelectedProduct(null)}
+                className="absolute top-3 right-3 bg-black/60 p-1.5 rounded-full hover:bg-red-600 transition z-20"
+              >
+                <X size={20} />
+              </button>
+            </div>
             
-            <div className="p-8 max-h-[70vh] overflow-y-auto">
-  {/* TÍTULO DINÂMICO: Se tiver meia a meia, ele monta o nome fracionado */}
-  <h3 className="text-2xl font-black uppercase mb-2 leading-tight tracking-tighter">
-    {halfProduct 
-      ? `1/2 ${selectedProduct.name} + 1/2 ${halfProduct.name}` 
-      : selectedProduct.name
-    }
-  </h3>
+            {/* Padding reduzido de p-8 para p-5 e max-height ajustada */}
+            <div className="p-5 max-h-[65vh] overflow-y-auto">
+              <h3 className="text-xl font-black uppercase mb-1 leading-tight tracking-tighter">
+                {halfProduct 
+                  ? `1/2 ${selectedProduct.name} + 1/2 ${halfProduct.name}` 
+                  : selectedProduct.name
+                }
+              </h3>
 
-  {/* DESCRIÇÃO ESTRATÉGICA: Só aparece se for pizza inteira ou bebida */}
-  {!halfProduct ? (
-    <p className="text-zinc-400 text-sm mb-6 animate-in fade-in duration-500">
-      {selectedProduct.description}
-    </p>
-  ) : (
-    /* Aviso visual discreto que substitui a descrição na meia a meia */
-    <div className="mb-6 flex items-center gap-2 text-red-500 animate-in slide-in-from-left-2">
-      <div className="h-1.5 w-1.5 bg-red-500 rounded-full animate-pulse"></div>
-      <span className="text-[10px] font-black uppercase tracking-widest">
-        Combinação Meio a Meio selecionada
-      </span>
-    </div>
-  )}
+              {!halfProduct ? (
+                <p className="text-zinc-400 text-xs mb-4 animate-in fade-in duration-500 line-clamp-2">
+                  {selectedProduct.description}
+                </p>
+              ) : (
+                <div className="mb-4 flex items-center gap-2 text-red-500 animate-in slide-in-from-left-2">
+                  <div className="h-1.5 w-1.5 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="text-[9px] font-black uppercase tracking-widest">
+                    Combinação Meio a Meio selecionada
+                  </span>
+                </div>
+              )}
 
-  {selectedProduct.category === 'Bebida' && (
-                <div className="bg-black border-2 border-zinc-800 p-6 rounded-3xl text-center mb-6">
-                  <span className="text-zinc-500 text-xs font-bold uppercase tracking-widest block mb-1">Valor Unitário</span>
-                  <span className="text-3xl font-black text-white">R$ {selectedProduct.priceFixed?.toFixed(2)}</span>
+              {selectedProduct.category === 'Bebida' && (
+                <div className="bg-black border border-zinc-800 p-4 rounded-2xl text-center mb-4">
+                  <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest block mb-1">Valor Unitário</span>
+                  <span className="text-2xl font-black text-white">R$ {selectedProduct.priceFixed?.toFixed(2)}</span>
                 </div>
               )}
 
               {selectedProduct.category === 'Pizza' && (
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <div>
-                    <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-3 block">Selecione o Tamanho</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {(['Média', 'Grande', 'Gigante', 'Família (12)', 'Maracanã (24)'] as PizzaSize[]).map(sz => {
-                        // Preços da primeira pizza
-                        const prices1 = {
-                          'Média': selectedProduct.priceM,
-                          'Grande': selectedProduct.priceG,
-                          'Gigante': selectedProduct.priceGG,
-                          'Família (12)': selectedProduct.priceFA,
-                          'Maracanã (24)': selectedProduct.priceMA
-                        };
-                        
-                        // Preços da segunda pizza (se houver)
-                        const prices2 = halfProduct ? {
-                          'Média': halfProduct.priceM,
-                          'Grande': halfProduct.priceG,
-                          'Gigante': halfProduct.priceGG,
-                          'Família (12)': halfProduct.priceFA,
-                          'Maracanã (24)': halfProduct.priceMA
-                        } : prices1;
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Selecione o Tamanho</label>
+<div className="grid grid-cols-2 gap-2">
+  {(['Média', 'Grande', 'Gigante', 'Família (12)', 'Maracanã (24)'] as PizzaSize[]).map(sz => {
+    const prices1 = {
+      'Média': selectedProduct.priceM,
+      'Grande': selectedProduct.priceG,
+      'Gigante': selectedProduct.priceGG,
+      'Família (12)': selectedProduct.priceFA,
+      'Maracanã (24)': selectedProduct.priceMA
+    };
+    const prices2 = halfProduct ? {
+      'Média': halfProduct.priceM,
+      'Grande': halfProduct.priceG,
+      'Gigante': halfProduct.priceGG,
+      'Família (12)': halfProduct.priceFA,
+      'Maracanã (24)': halfProduct.priceMA
+    } : prices1;
 
-                        // Pega sempre o maior valor entre as duas para o tamanho atual
-                        const currentPrice = Math.max(prices1[sz] || 0, prices2[sz] || 0);
+    const currentPrice = Math.max(prices1[sz] || 0, prices2[sz] || 0);
+    const isEnabled = selectedProduct.enabledSizes ? selectedProduct.enabledSizes.includes(sz) : !!prices1[sz];
+    if (!isEnabled) return null;
 
-                        const isEnabled = selectedProduct.enabledSizes ? selectedProduct.enabledSizes.includes(sz) : !!prices1[sz];
-                        if (!isEnabled) return null;
+    return (
+      <button 
+        key={sz}
+        onClick={() => setSize(sz)}
+        className={`py-2 rounded-xl text-[9px] font-bold transition flex flex-col items-center border-2 ${size === sz ? 'bg-red-600 border-red-600 text-white shadow-lg' : 'bg-black border-zinc-800 text-zinc-500 hover:border-zinc-700'}`}
+      >
+        <span className="uppercase">{sz.split(' ')[0]}</span>
+        
+        {/* AQUI ESTÁ A MUDANÇA: Legenda de fatias dinâmica */}
+        <span className={`text-[8px] opacity-70 mb-0.5 ${size === sz ? 'text-white' : 'text-zinc-500'}`}>
+          {sz === 'Média' && '4 FATIAS'}
+          {sz === 'Grande' && '6 FATIAS'}
+          {sz === 'Gigante' && '8 FATIAS'}
+          {sz === 'Família (12)' && '12 FATIAS'}
+          {sz === 'Maracanã (24)' && '24 FATIAS'}
+        </span>
 
-                        return (
-                          <button 
-                            key={sz}
-                            onClick={() => setSize(sz)}
-                            className={`py-3 rounded-2xl text-[10px] font-bold transition flex flex-col items-center gap-1 border-2 ${size === sz ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-600/30' : 'bg-black border-zinc-800 text-zinc-400 hover:border-zinc-700'}`}
-                          >
-                            <span className="uppercase">{sz.split(' ')[0]}</span>
-                            <span className="opacity-70 font-medium text-[9px]">
-                              {sz === 'Média' ? '4 FATIAS' : sz === 'Grande' ? '6 FATIAS' : sz === 'Gigante' ? '8 FATIAS' : sz === 'Família (12)' ? '12 FATIAS' : '24 FATIAS'}
-                            </span>
-                            {/* O PREÇO AQUI JÁ ATUALIZA SE FOR MEIA A MEIA */}
-                            <span className="text-xs mt-1 font-black">R$ {currentPrice.toFixed(2)}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
+        <span className="text-xs font-black">R$ {currentPrice.toFixed(2)}</span>
+      </button>
+    );
+  })}
+</div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-3 block">Deseja Meio a Meio?</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Deseja Meio a Meio?</label>
                     <select 
-                      className="w-full bg-black border-2 border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition uppercase text-sm font-bold text-white appearance-none"
+                      className="w-full bg-black border border-zinc-800 p-3 rounded-xl outline-none focus:border-red-600 transition uppercase text-xs font-bold text-white appearance-none"
                       onChange={(e) => {
                         const found = products.find(p => p.id === e.target.value);
                         setHalfProduct(found || null);
                       }}
                     >
-                      <option value="">🍕 ESCOLHA AQUI O OUTRO SABOR</option>
+                      <option value="">🍕 OUTRO SABOR?</option>
                       {products.filter(p => p.category === 'Pizza' && p.id !== selectedProduct.id && p.available).map(p => (
                         <option key={p.id} value={p.id}>+ {p.name}</option>
                       ))}
                     </select>
                   </div>
 
-                  {/* TELÃO DE PREÇO FINAL NO MODAL */}
-                  <div className="bg-red-600/10 border border-red-600/20 p-4 rounded-2xl flex justify-between items-center">
-                    <span className="text-xs font-black uppercase tracking-widest text-red-500">Total desta Pizza</span>
-                    <span className="text-2xl font-black text-white">
+                  <div className="bg-red-600/10 border border-red-600/20 p-3 rounded-xl flex justify-between items-center">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-red-500">Total</span>
+                    <span className="text-xl font-black text-white">
                       R$ {(() => {
                         const p1 = selectedProduct;
                         const p2 = halfProduct || p1;
@@ -344,9 +381,9 @@ const MenuList: React.FC<MenuListProps> = ({ products, onAddToCart, isOpen, prom
 
               <button 
                 onClick={handleAdd}
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 rounded-2xl mt-8 shadow-xl shadow-red-600/20 active:scale-[0.98] transition flex items-center justify-center gap-2 uppercase tracking-widest"
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-black py-3.5 rounded-xl mt-6 active:scale-[0.98] transition flex items-center justify-center gap-2 uppercase text-xs tracking-widest"
               >
-                ADICIONAR AO CARRINHO <Check size={20} />
+                ADICIONAR <Check size={18} />
               </button>
             </div>
           </div>
