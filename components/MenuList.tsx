@@ -173,7 +173,7 @@ const handleOpenModal = (p: Product) => {
                 className={`flex bg-zinc-950/70 border border-zinc-800 rounded-3xl overflow-hidden hover:border-red-600/50 transition duration-300 group cursor-pointer ${(!isOpen || !product.available) && 'opacity-70 grayscale-50'}`}
               >
 <div className="w-1/3 aspect-square overflow-hidden relative">
-                  {/* IMAGEM: Agora escurece se available for false OU se o estoque for 0 */}
+                  {/* IMAGEM: Escurece se estiver esgotado */}
                   <img 
                     src={product.image} 
                     alt={product.name} 
@@ -181,11 +181,11 @@ const handleOpenModal = (p: Product) => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
-                  {/* FAIXA DIAGONAL: Agora aparece se available for false OU se o estoque for 0 */}
+                  {/* AVISO CENTRALIZADO: No meio da imagem, alinhado e sem rotação */}
                   {(!product.available || product.stock === 0) && (
-                    <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-                      <div className="bg-red-600 text-white text-[9px] font-black uppercase py-1 w-[150%] text-center shadow-xl transform -rotate-45 translate-y-[-10px] translate-x-[-10px]">
-                        ESGOTADO
+                    <div className="absolute inset-0 flex items-center justify-center p-2">
+                      <div className="bg-red-600/90 text-white text-[10px] font-black uppercase py-1.5 px-3 rounded-md shadow-2xl border border-white/20 tracking-tighter">
+                        Esgotado
                       </div>
                     </div>
                   )}
