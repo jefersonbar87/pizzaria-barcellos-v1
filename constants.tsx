@@ -195,7 +195,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cocazero.jpg',
     available: true,
-    stock: 0,
+    stock: 10,
 },
   {
     id: 'piuval1iq',
@@ -249,8 +249,22 @@ export const INITIAL_PRODUCTS: Product[] = [
   }  
 ];
 
+// 1. Primeiro a lógica de horário (fora das configurações)
+const checkAutomaticOpening = () => {
+  const agora = new Date();
+  const hora = agora.getHours();
+  const minutos = agora.getMinutes();
+  const tempoAtual = hora * 60 + minutos;
+
+  const inicio = 17 * 60 + 20; // 17:20h
+  const fim = 23 * 60 + 45;    // 23:45h
+
+  return tempoAtual >= inicio && tempoAtual <= fim;
+};
+
 export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
   { name: 'NOVA ESPERANÇA', fee: 0 },
+  { name: 'Lagoa Park', fee: 0 },
   { name: 'LINHARES 5', fee: 0 },
   { name: 'SÃO JOSÉ', fee: 0 },
   { name: 'MOVELAR', fee: 0 },
@@ -259,12 +273,13 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
   { name: 'BOA VISTA', fee: 0 },
   { name: 'FONTE GRANDE', fee: 0 },
   { name: 'INTERLAGOS', fee: 5 },
+  { name: 'AVISO', fee: 5 },
 ];
 
 export const INITIAL_SETTINGS: AppSettings = {
-  isOpen: true,
+  isOpen: checkAutomaticOpening(),
   closedMode: 'hide-menu',
-  closeMessage: 'No momento estamos fechados. Retornaremos em breve!',
+  closeMessage: 'No momento estamos fechados. Nosso atendimento é de 17:30h às 23:45h!',
   neighborhoods: INITIAL_NEIGHBORHOODS,
   blockedNeighborhoods: 'Bagueira, Jocafe, Rio Quartel, Bebedouro, Residencial Rio Doce, Bairro Perigoso, Invasão',
   defaultDeliveryFee: 4,

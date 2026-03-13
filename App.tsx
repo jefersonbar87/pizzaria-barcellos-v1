@@ -311,8 +311,13 @@ const itemsText = orderData.items?.map(item => {
                   <MessageCircle size={18} className="text-green-500" />
                   <span>(27) 99618-3495</span>
                 </div>
-              </div>
-            </div>
+    {/* ADICIONEI O HORÁRIO AQUI EMBAIXO: */}
+    <div className="flex items-center justify-center md:justify-start gap-3">
+      <Pizza size={18} className="text-yellow-500" />
+      <span>Aberto: 17:30h às 23:45h</span>
+    </div>
+  </div>
+</div>
 
             {/* COLUNA 3: REDES SOCIAIS */}
             <div className="space-y-4">
