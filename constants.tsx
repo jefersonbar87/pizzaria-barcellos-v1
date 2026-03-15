@@ -249,7 +249,13 @@ export const INITIAL_PRODUCTS: Product[] = [
   }  
 ];
 
-// 1. Primeiro a lógica de horário (fora das configurações)
+// 1. Controle Manual (A CHAVE DA LOJA)
+// Mude para 'auto' para o robô abrir sozinho no horário
+// Mude para 'open' para forçar o site a ficar ABERTO
+// Mude para 'closed' para forçar o site a ficar FECHADO
+const MANUAL_CONTROL = 'auto' as 'auto' | 'open' | 'closed'; 
+
+// 2. Lógica de horário automática
 const checkAutomaticOpening = () => {
   const agora = new Date();
   const hora = agora.getHours();
@@ -264,8 +270,9 @@ const checkAutomaticOpening = () => {
 
 export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
   { name: 'NOVA ESPERANÇA', fee: 0 },
-  { name: 'Lagoa Park', fee: 0 },
+  { name: 'LAGOA PARK', fee: 0 },
   { name: 'LINHARES 5', fee: 0 },
+  { name: 'LINHARES V', fee: 0 },
   { name: 'SÃO JOSÉ', fee: 0 },
   { name: 'MOVELAR', fee: 0 },
   { name: 'GAIVOTAS', fee: 0 },
@@ -274,10 +281,18 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
   { name: 'FONTE GRANDE', fee: 0 },
   { name: 'INTERLAGOS', fee: 5 },
   { name: 'AVISO', fee: 5 },
+  { name: 'CANIVETE', fee: 5 },
+  { name: 'VILA MARIA', fee: 5 },
+  { name: 'VILA ISABEL', fee: 5 },
 ];
 
 export const INITIAL_SETTINGS: AppSettings = {
-  isOpen: checkAutomaticOpening(),
+  // Aqui o sistema decide: se estiver em 'auto', ele usa o relógio. 
+  // Se você mudar lá em cima para 'open' ou 'closed', ele obedece você!
+  isOpen: MANUAL_CONTROL === 'open' ? true : 
+          MANUAL_CONTROL === 'closed' ? false : 
+          checkAutomaticOpening(),
+
   closedMode: 'hide-menu',
   closeMessage: 'No momento estamos fechados. Nosso atendimento é de 17:30h às 23:45h!',
   neighborhoods: INITIAL_NEIGHBORHOODS,
