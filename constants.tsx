@@ -10,7 +10,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 77,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-4-sabores.png',
-    available: true,
+    available: false,
   },
   {
     id: '1wb4eziyb',
@@ -21,7 +21,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 78,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-frango-com-catupiry.png',
-    available: true,
+    available: false,
   },
   {
     id: '1uxypud3b',
@@ -54,7 +54,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 77,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-calabresa.png',
-    available: true,
+    available: false,
  },
   {
     id: '6m1ab7eh4',
@@ -65,7 +65,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 77,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-frango.png',
-    available: true,
+    available: false,
  },
   {
     id: '6qti9nfvd',
@@ -87,7 +87,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 83,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-juparana.png',
-    available: true,
+    available: false,
  },
   {
     id: '9bcnh8zs1',
@@ -98,7 +98,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 79,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-calabresa-com-cebola.png',
-    available: true,
+    available: false,
   },
   {
     id: 'alqbiz8an',
@@ -109,7 +109,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 80,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-a-moda-da-casa.png',
-    available: true,
+    available: false,
   },
   {
     id: 'gh5xo4u05',
@@ -142,7 +142,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 80,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-magiordano.png',
-    available: true,
+    available: false,
  },
   {
     id: 'm1h1jsim4',
@@ -164,7 +164,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 86,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-bata-frita.png',
-    available: true,
+    available: false,
  },
   {
     id: 'ujfiuq9r9',
