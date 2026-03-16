@@ -10,7 +10,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 77,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-4-sabores.png',
-    available: false,
+    available: true,
   },
   {
     id: '1wb4eziyb',
@@ -21,7 +21,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 78,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-frango-com-catupiry.png',
-    available: false,
+    available: true,
   },
   {
     id: '1uxypud3b',
@@ -54,7 +54,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 77,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-calabresa.png',
-    available: false,
+    available: true,
  },
   {
     id: '6m1ab7eh4',
@@ -65,7 +65,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 77,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-frango.png',
-    available: false,
+    available: true,
  },
   {
     id: '6qti9nfvd',
@@ -87,7 +87,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 83,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-juparana.png',
-    available: false,
+    available: true,
  },
   {
     id: '9bcnh8zs1',
@@ -98,7 +98,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 79,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-calabresa-com-cebola.png',
-    available: false,
+    available: true,
   },
   {
     id: 'alqbiz8an',
@@ -109,7 +109,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 80,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-a-moda-da-casa.png',
-    available: false,
+    available: true,
   },
   {
     id: 'gh5xo4u05',
@@ -142,7 +142,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 80,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-magiordano.png',
-    available: false,
+    available: true,
  },
   {
     id: 'm1h1jsim4',
@@ -164,7 +164,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 86,
     category: 'Pizza',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-bata-frita.png',
-    available: false,
+    available: true,
  },
   {
     id: 'ujfiuq9r9',
@@ -253,7 +253,7 @@ export const INITIAL_PRODUCTS: Product[] = [
 // Mude para 'auto' para o robô abrir sozinho no horário
 // Mude para 'open' para forçar o site a ficar ABERTO
 // Mude para 'closed' para forçar o site a ficar FECHADO
-const MANUAL_CONTROL = 'auto' as 'auto' | 'open' | 'closed'; 
+const MANUAL_CONTROL = 'open' as 'auto' | 'open' | 'closed'; 
 
 // 2. Lógica de horário automática
 const checkAutomaticOpening = () => {

@@ -19,8 +19,6 @@ const MenuList: React.FC<MenuListProps> = ({ products, onAddToCart, isOpen, prom
   const [activeCategory, setActiveCategory] = useState<'Pizza' | 'Bebida'>('Pizza');
 
 const handleOpenModal = (p: Product) => {
-    // AQUI: Agora ele bloqueia se a loja estiver fechada, 
-    // se o produto estiver desativado OU se o estoque for ZERO
     if (!isOpen || !p.available || p.stock === 0) return; 
     
     setSelectedProduct(p);
@@ -45,6 +43,10 @@ const handleOpenModal = (p: Product) => {
       totalPrice: promotion.price,
       isPromotion: true
     });
+
+    // SE ADICIONAR PROMOÇÃO (QUE É PIZZA), TAMBÉM PULA PRO REFRI!
+    setActiveCategory('Bebida');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleAdd = () => {
@@ -85,6 +87,12 @@ const handleOpenModal = (p: Product) => {
       quantity: 1,
       totalPrice: price
     });
+
+    // --- MUDANÇA ESTRATÉGICA AQUI ---
+    if (selectedProduct.category === 'Pizza') {
+      setActiveCategory('Bebida'); // Troca a aba para Bebida
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // Sobe a tela para ver os refris
+    }
 
     setSelectedProduct(null);
   };
