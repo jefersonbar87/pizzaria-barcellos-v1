@@ -16,6 +16,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   const [loadingCep, setLoadingCep] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false); // <-- ESTADO NOVO
+  const [showManualButton, setShowManualButton] = useState(false); // Estado para o botão de segurança
   const [deliveryMessage, setDeliveryMessage] = useState<string | null>(null);
   const [isBlocked, setIsBlocked] = useState(false);
   
@@ -161,8 +162,13 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
       // 1. Ativa a tela de sucesso NO MODAL
       setShowSuccess(true);
 
+      // --- AJUSTE CIRÚRGICO: Inicia o cronômetro de segurança ---
+      setTimeout(() => {
+        setShowManualButton(true);
+      }, 4000); 
+      // -------------------------------------------------------
+
       // 2. Envia os dados para o App.tsx
-      // O App.tsx agora é o responsável por esperar o tempo certo e dar o "onClose"
       await onSubmit({
         ...formData,
         address: fullAddress,
@@ -172,16 +178,12 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
         observation: formData.observation
       });
 
-      // ❌ REMOVI O SETTIMEOUT DAQUI! 
-      // Não resetamos nada agora. Deixamos o cliente vendo a tela de sucesso
-      // até que o App.tsx redirecione para o WhatsApp e feche a modal por fora.
-
     } catch (error) {
       console.error("Erro ao finalizar:", error);
       setShowSuccess(false);
-      setIsSubmitting(false); // Libera o botão em caso de erro real
+      setIsSubmitting(false);
+      setShowManualButton(false); // Reseta o botão se der erro
     }
-    // Removi o setIsSubmitting(false) do finally para evitar cliques duplos enquanto aguarda o Zap
   };
 
   if (!isOpen) return null;
@@ -200,10 +202,24 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
           <p className="text-zinc-400 text-sm leading-relaxed mb-8 font-medium">
             Estamos te encaminhando para o <span className="text-green-500 font-bold">WhatsApp</span> da Pizzaria Barcellos agora. 🍕🚀
           </p>
-          <div className="flex items-center justify-center gap-2 text-red-500 font-bold text-[10px] uppercase tracking-widest">
-            <Loader2 className="animate-spin" size={16} />
-            Redirecionando...
-          </div>
+
+          {/* AJUSTE CIRÚRGICO: Alterna entre "Redirecionando" e o "Botão Manual" */}
+          {!showManualButton ? (
+            <div className="flex items-center justify-center gap-2 text-red-500 font-bold text-[10px] uppercase tracking-widest">
+              <Loader2 className="animate-spin" size={16} />
+              Redirecionando...
+            </div>
+          ) : (
+            <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <p className="text-[10px] text-zinc-500 uppercase font-black mb-3">O redirecionamento falhou?</p>
+              <button 
+                onClick={handleFinalize}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-black py-4 rounded-2xl transition shadow-xl shadow-green-600/20 uppercase tracking-widest flex items-center justify-center gap-2 text-xs"
+              >
+                ENVIAR PARA WHATSAPP
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );

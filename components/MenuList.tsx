@@ -181,23 +181,50 @@ const handleOpenModal = (p: Product) => {
                 className={`flex bg-zinc-950/70 border border-zinc-800 rounded-3xl overflow-hidden hover:border-red-600/50 transition duration-300 group cursor-pointer ${(!isOpen || !product.available) && 'opacity-70 grayscale-50'}`}
               >
 <div className="w-1/3 aspect-square overflow-hidden relative">
-                  {/* IMAGEM: Escurece se estiver esgotado */}
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className={`w-full h-full object-cover group-hover:scale-110 transition duration-500 ${(!product.available || product.stock === 0) ? 'opacity-30 grayscale' : ''}`} 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+  {/* IMAGEM: Escurece se estiver esgotado */}
+  <img 
+    src={product.image} 
+    alt={product.name} 
+    className={`w-full h-full object-cover group-hover:scale-110 transition duration-500 ${(!product.available || product.stock === 0) ? 'opacity-30 grayscale' : ''}`} 
+  />
+  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
-                  {/* AVISO CENTRALIZADO: No meio da imagem, alinhado e sem rotação */}
-                  {(!product.available || product.stock === 0) && (
-                    <div className="absolute inset-0 flex items-center justify-center p-2">
-                      <div className="bg-red-600/90 text-white text-[10px] font-black uppercase py-1.5 px-3 rounded-md shadow-2xl border border-white/20 tracking-tighter">
-                        Esgotado
-                      </div>
-                    </div>
-                  )}
-                </div>
+  {/* NOVO: SELO NOVO SABOR COM DATA AUTOMÁTICA */}
+  {(() => {
+    // 1. Se a pizza não tiver data, não mostra nada
+    if (!product.createdAt) return null;
+    
+    // 2. Criamos as datas de forma robusta
+    // Pegamos o início do dia da criação (ex: 2026-03-20 00:00:00)
+    const dataCriacao = new Date(product.createdAt + 'T00:00:00').getTime();
+    
+    // Pegamos o exato momento de AGORA
+    const hoje = new Date().getTime();
+    
+    // Definimos o limite final da promoção (27/03 às 23:59:59)
+    const dataLimite = new Date('2026-03-27T23:59:59').getTime();
+    
+    // 3. A LÓGICA: Só mostra se estiver entre a criação e o limite
+    if (hoje >= dataCriacao && hoje <= dataLimite) {
+      return (
+        <div className="absolute top-1.5 left-1.5 z-20 bg-amber-500 text-black text-[7px] sm:text-[8px] font-black uppercase px-2 py-0.5 rounded shadow-lg border border-white/20 animate-pulse tracking-tighter">
+          ✨ Novo Sabor
+        </div>
+      );
+    }
+    
+    return null;
+  })()}
+
+  {/* AVISO CENTRALIZADO: Esgotado */}
+  {(!product.available || product.stock === 0) && (
+    <div className="absolute inset-0 flex items-center justify-center p-2">
+      <div className="bg-red-600/90 text-white text-[10px] font-black uppercase py-1.5 px-3 rounded-md shadow-2xl border border-white/20 tracking-tighter">
+        Esgotado
+      </div>
+    </div>
+  )}
+</div>
 
 <div className="p-5 flex flex-col justify-between w-2/3">
                   <div>
