@@ -6,10 +6,10 @@ interface MenuListProps {
   products: Product[];
   onAddToCart: (item: CartItem) => void;
   isOpen: boolean;
-  promotion?: Promotion;
+  promotions?: Promotion[];
 }
 
-const MenuList: React.FC<MenuListProps> = ({ products, onAddToCart, isOpen, promotion }) => {
+const MenuList: React.FC<MenuListProps> = ({ products, onAddToCart, isOpen, promotions }) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [size, setSize] = useState<PizzaSize>('Grande');
   const [halfProduct, setHalfProduct] = useState<Product | null>(null);
@@ -26,23 +26,23 @@ const handleOpenModal = (p: Product) => {
     setSize('Grande');
   };
 
-  const handleAddPromotion = () => {
-    if (!promotion || !isOpen) return;
-    
-    onAddToCart({
-      id: `promo-${Date.now()}`,
-      product1: {
-        id: 'promo',
-        name: promotion.title,
-        description: promotion.description,
-        image: promotion.image,
-        category: 'Pizza',
-        available: true
-      } as Product,
-      quantity: 1,
-      totalPrice: promotion.price,
-      isPromotion: true
-    });
+  const handleAddPromotion = (promo: Promotion) => { // <--- Adicionamos o parâmetro 'promo'
+  if (!promo || !isOpen) return;
+  
+  onAddToCart({
+    id: `promo-${Date.now()}-${Math.random()}`, // ID único para não dar conflito
+    product1: {
+      id: 'promo',
+      name: promo.title,
+      description: promo.description,
+      image: promo.image,
+      category: 'Pizza',
+      available: true
+    } as Product,
+    quantity: 1,
+    totalPrice: promo.price,
+    isPromotion: true
+  });
 
     // SE ADICIONAR PROMOÇÃO (QUE É PIZZA), TAMBÉM PULA PRO REFRI!
     setActiveCategory('Bebida');
@@ -99,50 +99,69 @@ const handleOpenModal = (p: Product) => {
 
   return (
     <div className="space-y-12">
-      {/* Promotion Section */}
-      {promotion?.active && (
-        <section>
-          <div className="flex items-center gap-4 mb-6">
-            <h3 className="text-2xl font-black uppercase tracking-tighter border-l-4 border-orange-500 pl-4 flex items-center gap-2">
-              <Flame className="text-orange-500" fill="currentColor" size={24} /> EM DESTAQUE
-            </h3>
-            <div className="h-px flex-grow bg-zinc-800"></div>
-          </div>
-          
-          <div 
-            onClick={handleAddPromotion}
-            className={`group relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-orange-600/20 to-red-600/20 border border-orange-500/30 p-1 cursor-pointer transition hover:scale-[1.01] active:scale-[0.99] ${!isOpen && 'opacity-70 grayscale'}`}
-          >
-            <div className="bg-zinc-900 rounded-[2.3rem] overflow-hidden flex flex-col md:flex-row">
-              <div className="md:w-1/2 aspect-square md:aspect-auto h-64 md:h-80 overflow-hidden relative">
-                <img src={promotion.image} alt={promotion.title} className="w-full h-full object-cover transition duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent"></div>
-                {promotion.freeDelivery && (
-                  <div className="absolute top-4 left-4 bg-green-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg flex items-center gap-2 animate-bounce">
-                    <Truck size={14} /> ENTREGA GRÁTIS
-                  </div>
-                )}
+      {/* Seção de Promoções Dinâmica */}
+{/* Ajustado: Adicionado o "p" em promotions e o parâmetro na função de clique */}
+{promotions && promotions.filter(p => p.active).length > 0 && (
+  <section className="animate-in fade-in duration-700">
+    <div className="flex items-center gap-4 mb-6">
+      <h3 className="text-2xl font-black uppercase tracking-tighter border-l-4 border-orange-500 pl-4 flex items-center gap-2">
+        <Flame className="text-orange-500" fill="currentColor" size={24} /> EM DESTAQUE
+      </h3>
+      <div className="h-px flex-grow bg-zinc-800"></div>
+    </div>
+    
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {promotions.filter(p => p.active).map((promo) => (
+        <div 
+          key={promo.id || promo.title}
+          onClick={() => handleAddPromotion(promo)} 
+          className={`group relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-orange-600/20 to-red-600/20 border border-orange-500/30 p-1 cursor-pointer transition hover:scale-[1.02] active:scale-[0.98] ${!isOpen && 'opacity-70 grayscale'}`}
+        >
+          <div className="bg-zinc-900 rounded-[2.3rem] overflow-hidden flex flex-col">
+            <div className="relative h-64 overflow-hidden">
+              <img 
+                src={promo.image} 
+                alt={promo.title} 
+                className="w-full h-full object-cover transition duration-700 group-hover:scale-110" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent"></div>
+              
+              {promo.freeDelivery && (
+                <div className="absolute top-4 left-4 bg-green-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg flex items-center gap-2 animate-bounce">
+                  <Truck size={14} /> ENTREGA GRÁTIS
+                </div>
+              )}
+            </div>
+
+            <div className="p-8 flex flex-col justify-center">
+              <div className="mb-4">
+                <span className="text-orange-500 text-xs font-black uppercase tracking-[0.2em] mb-2 block">Oferta Especial</span>
+                <h4 className="text-2xl font-black uppercase tracking-tighter leading-none mb-3 group-hover:text-orange-500 transition">
+                  {promo.title}
+                </h4>
+                <p className="text-zinc-400 text-sm leading-relaxed line-clamp-2">
+                  {promo.description}
+                </p>
               </div>
-              <div className="md:w-1/2 p-8 flex flex-col justify-center">
-                <div className="mb-4">
-                  <span className="text-orange-500 text-xs font-black uppercase tracking-[0.2em] mb-2 block">Oferta Especial</span>
-                  <h4 className="text-3xl font-black uppercase tracking-tighter leading-none mb-3 group-hover:text-orange-500 transition">{promotion.title}</h4>
-                  <p className="text-zinc-400 text-sm leading-relaxed">{promotion.description}</p>
+
+              <div className="flex items-center justify-between gap-4 mt-auto">
+                <div className="flex flex-col">
+                  <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest">Apenas por</span>
+                  <span className="text-3xl font-black text-white tracking-tighter">
+                    R$ {promo.price.toFixed(2)}
+                  </span>
                 </div>
-                <div className="flex items-center justify-between gap-4 mt-auto">
-                  <div className="flex flex-col">
-                    <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest">Apenas por</span>
-                    <span className="text-4xl font-black text-white tracking-tighter">R$ {promotion.price.toFixed(2)}</span>
-                  </div>
-                  <button className={`p-5 rounded-2xl shadow-xl transition active:scale-95 ${isOpen ? 'bg-orange-600 hover:bg-orange-700 shadow-orange-600/20' : 'bg-zinc-800 cursor-not-allowed'}`}>
-                    {isOpen ? <Plus size={28} className="text-white" strokeWidth={3} /> : <Lock size={28} className="text-zinc-500" />}
-                  </button>
-                </div>
+                <button className={`p-4 rounded-2xl shadow-xl transition active:scale-95 ${isOpen ? 'bg-orange-600 hover:bg-orange-700 shadow-orange-600/20' : 'bg-zinc-800 cursor-not-allowed'}`}>
+                  {isOpen ? <Plus size={24} className="text-white" strokeWidth={3} /> : <Lock size={24} className="text-zinc-500" />}
+                </button>
               </div>
             </div>
           </div>
-        </section>
-      )}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
 
       {/* --- NOVA NAVEGAÇÃO DE CATEGORIAS LADO A LADO --- */}
       <div className="flex justify-start gap-3 p-1 bg-zinc-900/80 backdrop-blur-xl rounded-full border border-zinc-800 max-w-full overflow-x-auto sticky top-20 z-40 px-2 sm:px-4 mb-10 shadow-2xl">

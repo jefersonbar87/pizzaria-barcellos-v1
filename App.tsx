@@ -281,7 +281,7 @@ const itemsText = orderData.items?.map(item => {
   </div>
 </div>
 
-        <MenuList products={products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))} onAddToCart={(i) => setCart([...cart, i])} isOpen={settings.isOpen || isOrderingAsAdmin} promotion={settings.promotion} />
+        <MenuList products={products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))} onAddToCart={(i) => setCart([...cart, i])} isOpen={settings.isOpen || isOrderingAsAdmin} promotions={settings.promotions} />
       </main>
 
       <footer className="bg-zinc-900/80 border-t border-zinc-800 pt-16 pb-8 backdrop-blur-xl">
@@ -305,7 +305,7 @@ const itemsText = orderData.items?.map(item => {
               <div className="flex flex-col gap-3 text-zinc-300 text-sm font-bold uppercase tracking-widest">
                 <div className="flex items-center justify-center md:justify-start gap-3">
                   <MapPin size={18} className="text-red-600" />
-                  <span>Linhares - Espírito Santo</span>
+                  <span>Nova Esperança - Linhares - ES</span>
                 </div>
                 <div className="flex items-center justify-center md:justify-start gap-3">
                   <MessageCircle size={18} className="text-green-500" />
@@ -314,7 +314,7 @@ const itemsText = orderData.items?.map(item => {
     {/* ADICIONEI O HORÁRIO AQUI EMBAIXO: */}
     <div className="flex items-center justify-center md:justify-start gap-3">
       <Pizza size={18} className="text-yellow-500" />
-      <span>Aberto: 17:30h às 23:45h</span>
+      <span>Aberto: 18:00h às 23:30h</span>
     </div>
   </div>
 </div>

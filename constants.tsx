@@ -286,8 +286,8 @@ const checkAutomaticOpening = () => {
   const minutos = agora.getMinutes();
   const tempoAtual = hora * 60 + minutos;
 
-  const inicio = 17 * 60 + 20; // 17:20h
-  const fim = 23 * 60 + 45;    // 23:45h
+  const inicio = 17 * 60 + 45; // 17:45h
+  const fim = 23 * 60 + 30;    // 23:30h
 
   return tempoAtual >= inicio && tempoAtual <= fim;
 };
@@ -318,7 +318,7 @@ export const INITIAL_SETTINGS: AppSettings = {
           checkAutomaticOpening(),
 
   closedMode: 'hide-menu',
-  closeMessage: 'No momento estamos fechados. Nosso atendimento é de 17:30h às 23:45h!',
+  closeMessage: 'Neste momento estamos fechados. Nosso atendimento é de 18h às 23:30h!',
   neighborhoods: INITIAL_NEIGHBORHOODS,
   blockedNeighborhoods: 'Bagueira, Jocafe, Rio Quartel, Bebedouro, Residencial Rio Doce, Bairro Perigoso, Invasão',
   defaultDeliveryFee: 4,
@@ -331,14 +331,28 @@ export const INITIAL_SETTINGS: AppSettings = {
   logoScale: 100,
   whatsappIcon: undefined,
   instagramIcon: undefined,
-  promotion: {
-    active: false,
-    title: 'PROMOÇÃO DO DIA',
-    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=1024',
-    price: 39.90,
-    freeDelivery: false,
-    description: 'Aproveite nossa promoção especial por tempo limitado!'
-  },
+  promotions: [
+    {
+      id: 'promo-coca', // Entre aspas para ser uma string
+      active: false,
+      title: 'PROMOÇÃO FAMÍLIA GG',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/promocao-coca-cola.avif',
+      price: 164.90,
+      freeDelivery: false,
+      description: 'Aqui você leva 16 pedaços de pizza + Coca Cola 2L GRÁTIS!'
+      
+    },
+    {
+      id: 'promo-coroa', // Entre aspas para ser uma string
+      active: false,
+      title: 'PROMOÇÃO FAMÍLIA G',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/promocao-coroa.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: true,
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+    }
+  ],
+  
   // Acrescentando as informações de rodapé solicitadas
   registeredTrademark: 'Marca Registrada',
   producedBy: 'Produzido por JefTecnologias'
