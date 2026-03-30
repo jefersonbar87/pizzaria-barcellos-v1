@@ -221,7 +221,18 @@ export const INITIAL_PRODUCTS: Product[] = [
     available: true,
     stock: 10,
 },
+
   {
+    id: 'piuvalssq',
+    name: 'REFRIGERANTE COROA GUARANÁ 1,5L',
+    description: 'Refrigerante 1,5L gelado',
+    priceFixed: 8.50,
+    category: 'Bebida',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/Coroa-Guarana.png',
+    available: true,
+    stock: 10,
+},
+{
     id: 'piuval1iq',
     name: 'REFRIGERANTE COROA UVA 2L',
     description: 'Refrigerante 2 litros gelado',
@@ -277,7 +288,7 @@ export const INITIAL_PRODUCTS: Product[] = [
 // Mude para 'auto' para o robô abrir sozinho no horário
 // Mude para 'open' para forçar o site a ficar ABERTO
 // Mude para 'closed' para forçar o site a ficar FECHADO
-const MANUAL_CONTROL = 'auto' as 'auto' | 'open' | 'closed'; 
+const MANUAL_CONTROL = 'open' as 'auto' | 'open' | 'closed'; 
 
 // 2. Lógica de horário automática
 const checkAutomaticOpening = () => {

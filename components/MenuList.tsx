@@ -94,8 +94,15 @@ const handleOpenModal = (p: Product) => {
       window.scrollTo({ top: 0, behavior: 'smooth' }); // Sobe a tela para ver os refris
     }
 
-    setSelectedProduct(null);
+setSelectedProduct(null);
   };
+
+  // --- PASSO 1: COLOQUE AQUI (ANTES DO RETURN) ---
+  const refri2L = products.filter(p => p.category === 'Bebida' && p.name.toUpperCase().includes('2L'));
+  const refri15L = products.filter(p => p.category === 'Bebida' && p.name.toUpperCase().includes('1,5L'));
+  const refri600 = products.filter(p => p.category === 'Bebida' && p.name.toUpperCase().includes('600ML'));
+  const refriLata = products.filter(p => p.category === 'Bebida' && (p.name.toUpperCase().includes('LATA') || p.name.toUpperCase().includes('350ML')));
+  // -----------------------------------------------
 
   return (
     <div className="space-y-12">

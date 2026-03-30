@@ -14,6 +14,7 @@ export interface Product {
   category: 'Pizza' | 'Bebida';
   image: string;
   available: boolean;
+  createdAt?: string;
   enabledSizes?: PizzaSize[]; // Explicit control over which sizes are shown
   stock?: number; 
 }
@@ -54,6 +55,7 @@ export interface Order {
 }
 
 export interface Promotion {
+  id: string;      // 👈 Adicione isso para cada promoção ter sua "identidade"
   active: boolean;
   title: string;
   image: string;
@@ -78,7 +80,7 @@ export interface AppSettings {
   logoScale?: number; // Size in pixels
   whatsappIcon?: string;
   instagramIcon?: string;
-  promotion: Promotion;
+  promotions: Promotion[];
   producedBy?: string;            // Para 'Produzido por JefTecnologias'
   registeredTrademark?: string;   // Para 'Marca Registrada' ou 'Todos os direitos reservados'
   stock?: number; // 👈 Adicione isso! O '?' indica que é opcional (pizzas não precisam de estoque fixo)
