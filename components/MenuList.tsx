@@ -215,22 +215,22 @@ setSelectedProduct(null);
   />
   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
-  {/* NOVO: SELO NOVO SABOR COM DATA AUTOMÁTICA */}
+{/* NOVO: SELO NOVO SABOR COM DATA AUTOMÁTICA (VERSÃO BLINDADA) */}
   {(() => {
-    // 1. Se a pizza não tiver data, não mostra nada
     if (!product.createdAt) return null;
     
-    // 2. Criamos as datas de forma robusta
-    // Pegamos o início do dia da criação (ex: 2026-03-20 00:00:00)
-    const dataCriacao = new Date(product.createdAt + 'T00:00:00').getTime();
+    // 1. Criamos a data de criação forçando o horário local (00:00:00)
+    const [year, month, day] = product.createdAt.split('-').map(Number);
+    const dataCriacao = new Date(year, month - 1, day).getTime();
     
-    // Pegamos o exato momento de AGORA
-    const hoje = new Date().getTime();
+    // 2. Pegamos o exato momento de AGORA (apenas o início do dia de hoje)
+    const agora = new Date();
+    const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate()).getTime();
     
-    // Definimos o limite final da promoção (27/03 às 23:59:59)
-    const dataLimite = new Date('2026-03-27T23:59:59').getTime();
+    // 3. Definimos o limite final (09/04) também sem erro de fuso
+    const dataLimite = new Date(2026, 3, 9, 23, 59, 59).getTime(); // Mês 3 é Abril no JS
     
-    // 3. A LÓGICA: Só mostra se estiver entre a criação e o limite
+    // 4. A LÓGICA: Aparece se hoje for igual ou maior que a criação E menor que o limite
     if (hoje >= dataCriacao && hoje <= dataLimite) {
       return (
         <div className="absolute top-1.5 left-1.5 z-20 bg-amber-500 text-black text-[7px] sm:text-[8px] font-black uppercase px-2 py-0.5 rounded shadow-lg border border-white/20 animate-pulse tracking-tighter">

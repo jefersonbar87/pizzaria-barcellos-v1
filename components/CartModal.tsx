@@ -14,6 +14,7 @@ interface CartModalProps {
 const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove, settings, onSubmit }) => {
   const [step, setStep] = useState(1);
   const [loadingCep, setLoadingCep] = useState(false);
+  const [loadingLocation, setLoadingLocation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false); // <-- ESTADO NOVO
   const [showManualButton, setShowManualButton] = useState(false); // Estado para o botão de segurança
@@ -59,7 +60,62 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
     const formatted = formatPhone(e.target.value);
     setFormData({ ...formData, phone: formatted });
   };
+const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Seu navegador não suporta localização.");
+      return;
+    }
 
+    setLoadingLocation(true);
+
+    // Configurações para forçar a precisão máxima do aparelho
+    const geoOptions = {
+      enableHighAccuracy: true, // O SEGREDO: Força o GPS de satélite do celular
+      timeout: 10000,           // Espera até 10 segundos pela melhor resposta
+      maximumAge: 0             // Não aceita localização "velha" do cache
+    };
+
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      try {
+        const { latitude, longitude } = position.coords;
+        
+        // Usando o serviço gratuito do OpenStreetMap
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
+        );
+        const data = await response.json();
+        
+        if (data.address) {
+          // Tenta pegar o CEP (postcode)
+          const cepEncontrado = data.address.postcode ? data.address.postcode.replace(/\D/g, '') : '';
+          
+          // Se achou o CEP, já preenche a rua e o bairro para o cliente não ter dúvida
+          if (cepEncontrado) {
+            setAddressData(prev => ({
+              ...prev,
+              street: data.address.road || data.address.pedestrian || prev.street,
+              bairro: data.address.suburb || data.address.neighbourhood || prev.bairro,
+              city: data.address.city || data.address.town || prev.city
+            }));
+            
+            // Chama sua lógica de CEP para validar as taxas da Barcellos
+            handleCepLookup(cepEncontrado);
+          } else {
+            alert("CEP não identificado nesta posição. Por favor, digite manualmente.");
+          }
+        }
+      } catch (error) {
+        alert("Erro ao identificar endereço. Tente o CEP manualmente.");
+      } finally {
+        setLoadingLocation(false);
+      }
+    }, (error) => {
+      // Mensagens de erro amigáveis para o cliente
+      if (error.code === 1) alert("Por favor, autorize a localização no seu navegador.");
+      else alert("Não conseguimos captar seu sinal de GPS. Digite o CEP.");
+      setLoadingLocation(false);
+    }, geoOptions); // <--- Passando as opções de alta precisão aqui
+  };
   const handleCepLookup = async (cep: string) => {
     const cleanedCep = cep.replace(/\D/g, '');
     setAddressData(prev => ({ ...prev, cep: cleanedCep }));
@@ -367,12 +423,42 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
-                      <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">CEP (Apenas números)</label>
-                      <div className="relative">
-                        <input type="text" maxLength={8} value={addressData.cep} onChange={e => handleCepLookup(e.target.value)} className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition font-mono tracking-widest text-lg text-white" placeholder="00000000" />
-                        {loadingCep && <Loader2 className="absolute right-4 top-4 animate-spin text-red-600" />}
-                      </div>
-                    </div>
+  <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">1. Digite seu CEP</label>
+  <div className="relative">
+    <input 
+      type="text" 
+      maxLength={8} 
+      value={addressData.cep} 
+      onChange={e => handleCepLookup(e.target.value)} 
+      className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition font-mono tracking-widest text-lg text-white" 
+      placeholder="00000000" 
+    />
+    {loadingCep && <Loader2 className="absolute right-4 top-4 animate-spin text-red-600" />}
+  </div>
+
+  {/* PASSO 2: PARA QUEM NÃO SABE O CEP - ADICIONADO AQUI */}
+  <div className="mt-4 flex flex-col items-center">
+    <div className="flex items-center gap-3 w-full mb-3 px-2">
+      <div className="h-px flex-grow bg-zinc-800"></div>
+      <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">Ou se não souber</span>
+      <div className="h-px flex-grow bg-zinc-800"></div>
+    </div>
+    
+    <button
+      type="button"
+      onClick={handleGetLocation}
+      disabled={loadingLocation || loadingCep}
+      className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl border border-dashed border-zinc-800 bg-zinc-900/30 hover:border-red-600 hover:bg-red-600/5 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all active:scale-95"
+    >
+      {loadingLocation ? (
+        <Loader2 className="animate-spin text-red-600" size={14} />
+      ) : (
+        <MapPin size={14} className="text-red-600" />
+      )}
+      {loadingLocation ? "Localizando..." : "2. Pedir pela minha localização atual"}
+    </button>
+  </div>
+</div>
 
                     {deliveryMessage && (
                       <div className={`col-span-2 p-4 rounded-2xl flex items-start gap-3 animate-in fade-in zoom-in-95 ${isBlocked ? 'bg-red-600/20 text-red-500 border border-red-600' : 'bg-green-600/20 text-green-500 border border-green-600'}`}>
