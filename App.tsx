@@ -229,31 +229,69 @@ const itemsText = orderData.items?.map(item => {
       }}
     >
             <header className="sticky top-0 z-50 bg-[#1B431D] border-b border-black/20 shadow-2xl">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="flex items-center gap-4 cursor-pointer select-none" onClick={handleLogoClick}>
-            {settings.logoImage ? (
-              <img src={settings.logoImage} alt="Logo" style={{ height: '60px' }} className="w-auto object-contain" />
-            ) : (
-              <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center font-black text-xl shadow-lg">B</div>
-            )}
-            <div>
-              <h1 className="text-white text-xl font-black tracking-tighter uppercase leading-none">Pizzaria Barcellos</h1>
-              <p className="text-white/60 text-[9px] font-bold tracking-[0.3em] uppercase">Produzindo Qualidade</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            {isOrderingAsAdmin && (
-              <button onClick={() => setIsOrderingAsAdmin(false)} className="px-4 py-2 bg-white/10 text-white rounded-xl font-bold text-[10px] uppercase border border-white/20 flex items-center gap-2">
-                <ArrowLeft size={16} /> Voltar ao Painel
-              </button>
-            )}
-            <button onClick={() => setIsCartOpen(true)} disabled={!settings.isOpen && !isOrderingAsAdmin} className={`relative p-3 bg-white/10 rounded-full hover:bg-white/20 transition border border-white/10 ${(!settings.isOpen && !isOrderingAsAdmin) && 'opacity-30'}`}>
-              <ShoppingCart size={22} className="text-white" />
-              {cart.length > 0 && <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#1B431D] animate-pulse">{cart.length}</span>}
-            </button>
-          </div>
+  <div className="container mx-auto px-4 py-3">
+    {/* LINHA SUPERIOR: LOGO E CARRINHO */}
+    <div className="flex justify-between items-center mb-3">
+      <div className="flex items-center gap-4 cursor-pointer select-none" onClick={handleLogoClick}>
+        {settings.logoImage ? (
+          <img src={settings.logoImage} alt="Logo" style={{ height: '60px' }} className="w-auto object-contain" />
+        ) : (
+          <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center font-black text-xl shadow-lg">B</div>
+        )}
+        <div>
+          <h1 className="text-white text-xl font-black tracking-tighter uppercase leading-none">Pizzaria Barcellos</h1>
+          <p className="text-white/60 text-[9px] font-bold tracking-[0.3em] uppercase">Produzindo Qualidade</p>
         </div>
-      </header>
+      </div>
+
+      <div className="flex items-center gap-4">
+        {isOrderingAsAdmin && (
+          <button onClick={() => setIsOrderingAsAdmin(false)} className="px-4 py-2 bg-white/10 text-white rounded-xl font-bold text-[10px] uppercase border border-white/20 flex items-center gap-2">
+            <ArrowLeft size={16} /> Voltar ao Painel
+          </button>
+        )}
+        <button 
+          onClick={() => setIsCartOpen(true)} 
+          disabled={!settings.isOpen && !isOrderingAsAdmin} 
+          className={`relative p-3 bg-white/10 rounded-full hover:bg-white/20 transition border border-white/10 ${(!settings.isOpen && !isOrderingAsAdmin) && 'opacity-30'}`}
+        >
+          <ShoppingCart size={22} className="text-white" />
+          {cart.length > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#1B431D] animate-pulse">
+              {cart.length}
+            </span>
+          )}
+        </button>
+      </div>
+    </div>
+
+    {/* LINHA INFERIOR: STATUS DA LOJA E WHATSAPP CLICÁVEL */}
+    <div className="flex justify-start">
+      <div className="inline-flex items-center gap-3 bg-black/30 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/5">
+        {/* Indicador Visual de Status */}
+        <div className="flex items-center gap-2">
+          <div className={`w-2.5 h-2.5 rounded-full animate-pulse ${settings.isOpen ? 'bg-green-500 shadow-[0_0_8px_#22c55e]' : 'bg-red-500 shadow-[0_0_8px_#ef4444]'}`}></div>
+          <span className="text-[10px] font-black uppercase tracking-wider text-white">
+            {settings.isOpen ? 'Loja Aberta' : 'Loja Fechada'}
+          </span>
+        </div>
+
+        <span className="text-white/20 text-xs">|</span>
+
+        {/* Link direto para o seu WhatsApp */}
+        <a 
+          href={`https://wa.me/${CONTACT_WHATSAPP}`} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+        >
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" className="w-3.5 h-3.5" alt="Zap" />
+          <span className="text-[10px] font-bold text-white tracking-wide">(27) 99618-3495</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
 
       <main className="flex-grow container mx-auto px-4 py-8 max-w-4xl">
         {!settings.isOpen && !isOrderingAsAdmin && (
