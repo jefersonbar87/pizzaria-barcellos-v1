@@ -17,6 +17,8 @@ const MenuList: React.FC<MenuListProps> = ({ products, onAddToCart, isOpen, prom
   // Variável de categorias e Estado para controlar a aba ativa
   const categories: ('Pizza' | 'Bebida')[] = ['Pizza', 'Bebida'];
   const [activeCategory, setActiveCategory] = useState<'Pizza' | 'Bebida'>('Pizza');
+  // Adicione esta linha abaixo do activeCategory
+  const [pizzaSubCategory, setPizzaSubCategory] = useState<'Todas' | 'Clássicas' | 'Premium'>('Todas');
 
 const handleOpenModal = (p: Product) => {
     if (!isOpen || !p.available || p.stock === 0) return; 
@@ -188,73 +190,102 @@ setSelectedProduct(null);
         ))}
       </div>
 
-      {/* --- LISTAGEM DOS PRODUTOS FILTRADOS --- */}
+{/* --- LISTAGEM DOS PRODUTOS FILTRADOS --- */}
       <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="flex items-center gap-4 mb-8">
-          <h3 className="text-2xl font-black uppercase tracking-tighter border-l-4 border-red-600 pl-4">
-            Nossas {activeCategory}s
-          </h3>
-          <div className="h-px flex-grow bg-zinc-800/50"></div>
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="flex items-center gap-4">
+            <h3 className="text-2xl font-black uppercase tracking-tighter border-l-4 border-red-600 pl-4">
+              Nossas {activeCategory}s
+            </h3>
+            <div className="h-px flex-grow bg-zinc-800/50"></div>
+          </div>
+
+          {/* SUBCLASSE DE FILTROS AJUSTADA */}
+          {activeCategory === 'Pizza' && (
+            <div className="flex gap-2 px-1 overflow-x-auto py-2 min-h-[50px] items-center">
+              {(['Todas', 'Clássicas', 'Premium'] as const).map((sub) => (
+                <button
+                  key={sub}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPizzaSubCategory(sub);
+                  }}
+                  className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border whitespace-nowrap ${
+                    pizzaSubCategory === sub
+                    ? 'bg-white text-black border-white shadow-lg scale-105'
+                    : 'bg-zinc-900 text-zinc-500 border-zinc-800 hover:border-zinc-600'
+                  }`}
+                >
+                  {sub}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {products
-            .filter(p => p.category === activeCategory)
-            .map(product => (
+            .filter(p => {
+              // 1. Filtro de Categoria Principal (Pizza ou Bebida)
+              const matchesMainCategory = p.category === activeCategory;
+              if (!matchesMainCategory) return false;
+              
+             // 2. NOVO: Filtro de Subcategoria para Pizzas
+              if (activeCategory === 'Pizza') {
+                if (pizzaSubCategory === 'Clássicas') return p.isPremium === false;
+                if (pizzaSubCategory === 'Premium') return p.isPremium === true;
+              }
+              return true; // Se for "Todas" ou Bebidas mostra tudo
+            }) // <--- Aqui termina o filtro
+            .sort((a, b) => (a.index ?? 99) - (b.index ?? 99)) // <--- ADICIONE ESTA LINHA AQUI!
+            .map(product => ( // <--- Aqui começa a mostrar na tela
               <div 
                 key={product.id} 
                 onClick={() => handleOpenModal(product)}
                 className={`flex bg-zinc-950/70 border border-zinc-800 rounded-3xl overflow-hidden hover:border-red-600/50 transition duration-300 group cursor-pointer ${(!isOpen || !product.available) && 'opacity-70 grayscale-50'}`}
               >
-<div className="w-1/3 aspect-square overflow-hidden relative">
-  {/* IMAGEM: Escurece se estiver esgotado */}
-  <img 
-    src={product.image} 
-    alt={product.name} 
-    className={`w-full h-full object-cover group-hover:scale-110 transition duration-500 ${(!product.available || product.stock === 0) ? 'opacity-30 grayscale' : ''}`} 
-  />
-  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="w-1/3 aspect-square overflow-hidden relative">
+                  {/* IMAGEM: Escurece se estiver esgotado */}
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className={`w-full h-full object-cover group-hover:scale-110 transition duration-500 ${(!product.available || product.stock === 0) ? 'opacity-30 grayscale' : ''}`} 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
-{/* NOVO: SELO NOVO SABOR COM DATA AUTOMÁTICA (VERSÃO BLINDADA) */}
-  {(() => {
-    if (!product.createdAt) return null;
-    
-    // 1. Criamos a data de criação forçando o horário local (00:00:00)
-    const [year, month, day] = product.createdAt.split('-').map(Number);
-    const dataCriacao = new Date(year, month - 1, day).getTime();
-    
-    // 2. Pegamos o exato momento de AGORA (apenas o início do dia de hoje)
-    const agora = new Date();
-    const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate()).getTime();
-    
-    // 3. Definimos o limite final (09/04) também sem erro de fuso
-    const dataLimite = new Date(2026, 3, 9, 23, 59, 59).getTime(); // Mês 3 é Abril no JS
-    
-    // 4. A LÓGICA: Aparece se hoje for igual ou maior que a criação E menor que o limite
-    if (hoje >= dataCriacao && hoje <= dataLimite) {
-      return (
-        <div className="absolute top-1.5 left-1.5 z-20 bg-amber-500 text-black text-[7px] sm:text-[8px] font-black uppercase px-2 py-0.5 rounded shadow-lg border border-white/20 animate-pulse tracking-tighter">
-          ✨ Novo Sabor
-        </div>
-      );
-    }
-    
-    return null;
-  })()}
+                  {/* SELO NOVO SABOR COM DATA AUTOMÁTICA */}
+                  {(() => {
+                    if (!product.createdAt) return null;
+                    const [year, month, day] = product.createdAt.split('-').map(Number);
+                    const dataCriacao = new Date(year, month - 1, day).getTime();
+                    const agora = new Date();
+                    const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate()).getTime();
+                    const dataLimite = new Date(2026, 3, 9, 23, 59, 59).getTime(); 
+                    
+                    if (hoje >= dataCriacao && hoje <= dataLimite) {
+                      return (
+                        <div className="absolute top-1.5 left-1.5 z-20 bg-amber-500 text-black text-[7px] sm:text-[8px] font-black uppercase px-2 py-0.5 rounded shadow-lg border border-white/20 animate-pulse tracking-tighter">
+                          ✨ Novo Sabor
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
 
-  {/* AVISO CENTRALIZADO: Esgotado */}
-  {(!product.available || product.stock === 0) && (
-    <div className="absolute inset-0 flex items-center justify-center p-2">
-      <div className="bg-red-600/90 text-white text-[10px] font-black uppercase py-1.5 px-3 rounded-md shadow-2xl border border-white/20 tracking-tighter">
-        Esgotado
-      </div>
-    </div>
-  )}
-</div>
+                  {/* AVISO CENTRALIZADO: Esgotado */}
+                  {(!product.available || product.stock === 0) && (
+                    <div className="absolute inset-0 flex items-center justify-center p-2">
+                      <div className="bg-red-600/90 text-white text-[10px] font-black uppercase py-1.5 px-3 rounded-md shadow-2xl border border-white/20 tracking-tighter">
+                        Esgotado
+                      </div>
+                    </div>
+                  )}
+                </div>
 
-<div className="p-5 flex flex-col justify-between w-2/3">
+                <div className="p-5 flex flex-col justify-between w-2/3">
                   <div>
-                    {/* O NOME: Fica cinza se acabar o estoque ou estiver desativado */}
+                    {/* O NOME */}
                     <h4 className={`font-bold text-lg leading-tight mb-1 transition uppercase ${(!product.available || product.stock === 0) ? 'text-zinc-600' : 'group-hover:text-red-500 text-white'}`}>
                       {product.name}
                     </h4>
@@ -262,7 +293,6 @@ setSelectedProduct(null);
                     <p className="text-zinc-500 text-xs line-clamp-2 leading-relaxed">
                       {product.description}
                     </p>
-
                     {/* AVISO DE ESTOQUE BAIXO */}
                     {product.stock !== undefined && product.stock > 0 && product.stock <= 3 && (
                       <div className="mt-2 flex items-center gap-1.5 animate-pulse">

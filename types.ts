@@ -12,6 +12,7 @@ export interface Product {
   priceMA?: number; // 24 slices
   priceFixed?: number; // For drinks
   category: 'Pizza' | 'Bebida';
+  isPremium?: boolean; // 👈 ADICIONE ESTA LINHA AQUI!
   image: string;
   available: boolean;
   createdAt?: string;
