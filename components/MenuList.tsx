@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { Product, CartItem, PizzaSize, Promotion } from '../types';
-import { Plus, Check, Info, X, Lock, Flame, Truck, Pizza, CupSoda } from 'lucide-react';
+import { Plus, Check, Info, X, Lock, Flame, Truck, Pizza, CupSoda, Search } from 'lucide-react';
 
 interface MenuListProps {
   products: Product[];
   onAddToCart: (item: CartItem) => void;
   isOpen: boolean;
   promotions?: Promotion[];
+  searchQuery: string;        // <--- Adicione esta
+  setSearchQuery: (query: string) => void; // <--- Adicione esta
 }
 
-const MenuList: React.FC<MenuListProps> = ({ products, onAddToCart, isOpen, promotions }) => {
+const MenuList: React.FC<MenuListProps> = ({ products, onAddToCart, isOpen, promotions, searchQuery, setSearchQuery }) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [size, setSize] = useState<PizzaSize>('Grande');
   const [halfProduct, setHalfProduct] = useState<Product | null>(null);
-  
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   // Variável de categorias e Estado para controlar a aba ativa
   const categories: ('Pizza' | 'Bebida')[] = ['Pizza', 'Bebida'];
   const [activeCategory, setActiveCategory] = useState<'Pizza' | 'Bebida'>('Pizza');
@@ -191,14 +193,47 @@ setSelectedProduct(null);
       </div>
 
 {/* --- LISTAGEM DOS PRODUTOS FILTRADOS --- */}
-      <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="flex flex-col gap-4 mb-8">
-          <div className="flex items-center gap-4">
+<section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+  <div className="flex flex-col gap-4 mb-8">
+<div className="flex items-center justify-between gap-4">
             <h3 className="text-2xl font-black uppercase tracking-tighter border-l-4 border-red-600 pl-4">
               Nossas {activeCategory}s
             </h3>
-            <div className="h-px flex-grow bg-zinc-800/50"></div>
+            
+            {/* BOTÃO DA LUPA MINIMALISTA COM PISCO */}
+            <button 
+              type="button"
+              onClick={() => {
+                if (isSearchOpen) {
+                  setSearchQuery(''); // Limpa a busca ao fechar
+                }
+                setIsSearchOpen(!isSearchOpen);
+              }}
+              className={`p-3 rounded-2xl transition-all duration-300 border ${
+                isSearchOpen 
+                ? 'bg-red-600 border-red-500 text-white shadow-[0_0_20px_rgba(220,38,38,0.4)] scale-105' 
+                : 'bg-black border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 animate-pulse' 
+              }`}
+            >
+              <Search size={20} strokeWidth={3} />
+            </button>
           </div>
+
+          {/* Campo de Busca Expansível */}
+          {isSearchOpen && (
+            <div className="animate-in slide-in-from-top-2 duration-300">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={`Buscar ${activeCategory.toLowerCase()}...`}
+                className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-2xl text-sm focus:border-red-600 outline-none transition-all text-white placeholder:text-zinc-600"
+                autoFocus
+              />
+            </div>
+          )}
+
+          <div className="h-px w-full bg-zinc-800/50"></div>
 
           {/* SUBCLASSE DE FILTROS AJUSTADA */}
           {activeCategory === 'Pizza' && (
@@ -304,23 +339,45 @@ setSelectedProduct(null);
                     )}
                   </div>
 
-                  <div className="flex justify-between items-end mt-2">
-                    <span className={`font-bold text-lg ${(!product.available || product.stock === 0) ? 'text-zinc-700' : 'text-red-500'}`}>
-                      {product.category === 'Bebida' 
-                        ? `R$ ${product.priceFixed?.toFixed(2).replace('.', ',')}` 
-                        : `A partir de R$ ${product.priceM?.toFixed(2).replace('.', ',')}`}
-                    </span>
-                    
-                    {/* BOTÃO ÚNICO E CORRIGIDO */}
-                    <button 
-                      className={`p-2 rounded-xl text-white shadow-lg transition active:scale-90 ${
-                        (isOpen && product.available && (product.stock === undefined || product.stock > 0)) 
-                        ? 'bg-red-600 hover:bg-red-700 shadow-red-600/20' 
-                        : 'bg-zinc-800 cursor-not-allowed opacity-50'
-                      }`}
-                    >
-                      {(isOpen && product.available && (product.stock === undefined || product.stock > 0)) ? <Plus size={20} /> : <Lock size={18} />}
-                    </button>
+                  {/* MOLDURA COMPACTA COM "FATIAS" COMPLETO E ACESO */}
+                  <div className="mt-2">
+                    {product.category === 'Pizza' ? (
+                      <div className="p-2 rounded-xl border border-white/30 bg-black/60 space-y-0.5 shadow-lg shadow-black/50">
+                        {/* MÉDIA */}
+                        <div className="flex justify-between items-center text-[12px] sm:text-[13px] leading-none py-0.5">
+                          <span className="text-zinc-300 font-black uppercase tracking-tighter italic">
+                            Média <span className="text-[10px] opacity-80 font-medium"> (4 fatias)</span>
+                          </span>
+                          <span className="text-white font-black">R$ {product.priceM?.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        
+                        {/* GRANDE */}
+                        <div className="flex justify-between items-center text-[12px] sm:text-[13px] leading-none border-t border-white/10 pt-1 pb-0.5">
+                          <span className="text-zinc-300 font-black uppercase tracking-tighter italic">
+                            Grande <span className="text-[10px] opacity-80 font-medium"> (6 fatias)</span>
+                          </span>
+                          <span className="text-white font-black">R$ {product.priceG?.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        
+                        {/* GIGANTE */}
+                        <div className="flex justify-between items-center text-[12px] sm:text-[13px] leading-none border-t border-white/10 pt-1 pb-0.5">
+                          <span className="text-zinc-300 font-black uppercase tracking-tighter italic">
+                            Gigante <span className="text-[10px] opacity-80 font-medium"> (8 fatias)</span>
+                          </span>
+                          <span className="text-white font-black">R$ {product.priceGG?.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Layout para Bebidas */
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="text-red-500 font-black text-xl">
+                          R$ {product.priceFixed?.toFixed(2).replace('.', ',')}
+                        </span>
+                        <div className="p-1.5 bg-zinc-800 rounded-lg text-white border border-white/10">
+                          <Plus size={18} strokeWidth={3} />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

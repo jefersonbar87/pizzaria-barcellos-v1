@@ -319,7 +319,18 @@ const itemsText = orderData.items?.map(item => {
   </div>
 </div>
 
-        <MenuList products={products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))} onAddToCart={(i) => setCart([...cart, i])} isOpen={settings.isOpen || isOrderingAsAdmin} promotions={settings.promotions} />
+       <MenuList 
+  // Agora busca no nome e na descrição (ingredientes)
+  products={products.filter(p => 
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    p.description.toLowerCase().includes(searchQuery.toLowerCase())
+  )} 
+  onAddToCart={(i) => setCart([...cart, i])} 
+  isOpen={settings.isOpen || isOrderingAsAdmin} 
+  promotions={settings.promotions}
+  searchQuery={searchQuery}
+  setSearchQuery={setSearchQuery}
+/>
       </main>
 
       <footer className="bg-zinc-900/80 border-t border-zinc-800 pt-16 pb-8 backdrop-blur-xl">
