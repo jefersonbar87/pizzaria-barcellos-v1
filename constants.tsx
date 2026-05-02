@@ -26,7 +26,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI
     createdAt: '2026-04-02',
-    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/barcellos.avif',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/barcellos-completa.avif',
     available: true,
   },
   {
@@ -301,6 +301,16 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola.png',
     available: true,
+    stock: 0,
+    },
+  {
+    id: 'ab41mss9y',
+    name: 'REFRIGERANTE COCA COLA 1,5L',
+    description: 'Refrigerante 1,5L gelado',
+    priceFixed: 13.50,
+    category: 'Bebida',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola1,5l.avif',
+    available: true,
     stock: 10,
 },
   {
@@ -320,10 +330,20 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: 'Refrigerante lata 350ml gelado',
     priceFixed: 7,
     category: 'Bebida',
-    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola-lata.jpg',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola-lata.avif',
     available: true,
     stock: 10,
-},    
+},  
+  {
+    id: '7oglY4b53',
+    name: 'REFRIGERANTE COCA COLA ZERO LATA 350ML',
+    description: 'Refrigerante lata 350ml gelado',
+    priceFixed: 7,
+    category: 'Bebida',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola-lata-zero.avif',
+    available: true,
+    stock: 10,
+},   
   
     {
     id: '6oglqAP39',
