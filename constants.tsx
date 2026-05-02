@@ -391,7 +391,7 @@ export const INITIAL_PRODUCTS: Product[] = [
 // Mude para 'auto' para o robô abrir sozinho no horário
 // Mude para 'open' para forçar o site a ficar ABERTO
 // Mude para 'closed' para forçar o site a ficar FECHADO
-const MANUAL_CONTROL = 'open' as 'auto' | 'open' | 'closed'; 
+const MANUAL_CONTROL = 'auto' as 'auto' | 'open' | 'closed'; 
 
 // 2. Lógica de horário automática
 const checkAutomaticOpening = () => {
@@ -434,7 +434,7 @@ export const INITIAL_SETTINGS: AppSettings = {
   closedMode: 'hide-menu',
   closeMessage: 'NESTE MOMENTO ESTAMOS FECHADOS, NOSSO ATENDIMENTO É DE 18:00H ÀS 23:30H',
   neighborhoods: INITIAL_NEIGHBORHOODS,
-  blockedNeighborhoods: 'Bagueira, Jocafe, Rio Quartel, Bebedouro, Residencial Rio Doce, Bairro Perigoso, Invasão',
+  blockedNeighborhoods: 'Bagueira, Rio Quartel, Bebedouro, Residencial Rio Doce, Bairro Perigoso, Invasão',
   defaultDeliveryFee: 4,
   allowedCity: 'LINHARES',
   bannerText: 'SABOR EM CADA DETALHE',
