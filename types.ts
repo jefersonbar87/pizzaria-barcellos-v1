@@ -17,7 +17,8 @@ export interface Product {
   available: boolean;
   createdAt?: string;
   enabledSizes?: PizzaSize[]; // Explicit control over which sizes are shown
-  stock?: number; 
+  stock?: number;
+  index?: number; 
 }
 
 export interface CartItem {
@@ -62,10 +63,13 @@ export interface Promotion {
   image: string;
   price: number;
   freeDelivery: boolean;
+  isClickable?: boolean;
   description: string;
 }
 
 export interface AppSettings {
+  showAdCartaz: boolean; 
+  adCartazLink: string;
   isOpen: boolean;
   closedMode: 'hide-menu' | 'show-menu-readonly';
   closeMessage: string;

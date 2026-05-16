@@ -9,6 +9,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 50,
     priceG: 65,
     priceGG: 82,
+    priceFA: 111,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI
     createdAt: '2026-04-02',
@@ -23,6 +24,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 52,
     priceG: 68,
     priceGG: 85,
+    priceFA: 115,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI
     createdAt: '2026-04-02',
@@ -37,6 +39,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 49,
     priceG: 64,
     priceGG: 79,
+    priceFA: 107,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI
     createdAt: '2026-04-02',
@@ -51,6 +54,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 48,
     priceG: 63,
     priceGG: 78,
+    priceFA: 106,
     category: 'Pizza',
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     createdAt: '2026-04-02',
@@ -65,6 +69,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 47,
     priceG: 62,
     priceGG: 77,
+    priceFA: 104,
     category: 'Pizza',
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     //createdAt: '2026-03-20', pizza ja inclusa
@@ -79,6 +84,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 50,
     priceG: 65,
     priceGG: 81,
+    priceFA: 110,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     //createdAt: '2026-03-20', pizza ja inclusa
@@ -93,6 +99,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 47,
     priceG: 62,
     priceGG: 77,
+    priceFA: 104,
     category: 'Pizza',
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-4-sabores.png',
@@ -106,6 +113,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 48,
     priceG: 63,
     priceGG: 78,
+    priceFA: 106,
     category: 'Pizza',
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-frango-com-catupiry.png',
@@ -119,6 +127,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 47,
     priceG: 62,
     priceGG: 77,
+    priceFA: 104,
     category: 'Pizza',
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-mista.png',
@@ -132,6 +141,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 47,
     priceG: 62,
     priceGG: 77,
+    priceFA: 104,
     category: 'Pizza',
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-mucarela.png',
@@ -145,6 +155,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 47,
     priceG: 62,
     priceGG: 77,
+    priceFA: 104,
     category: 'Pizza',
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-calabresa.png',
@@ -158,6 +169,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 47,
     priceG: 62,
     priceGG: 77,
+    priceFA: 104,
     category: 'Pizza',
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-frango.png',
@@ -171,6 +183,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 50,
     priceG: 67,
     priceGG: 84,
+    priceFA: 114,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-carioca.png',
@@ -184,6 +197,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 49,
     priceG: 64,
     priceGG: 80,
+    priceFA: 108,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-magiordano.png',
@@ -197,6 +211,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 49,
     priceG: 64,
     priceGG: 79,
+    priceFA: 107,
     category: 'Pizza',
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-calabresa-com-cebola.png',
@@ -210,6 +225,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 50,
     priceG: 65,
     priceGG: 80,
+    priceFA: 108,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-a-moda-da-casa.png',
@@ -223,6 +239,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 49,
     priceG: 66,
     priceGG: 82,
+    priceFA: 111,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-3-queijos.png',
@@ -236,6 +253,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 49,
     priceG: 65,
     priceGG: 82,
+    priceFA: 111,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-lombo-canadense.png',
@@ -249,6 +267,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 50,
     priceG: 66,
     priceGG: 83,
+    priceFA: 113,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-juparana.png',
@@ -262,6 +281,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 49,
     priceG: 65,
     priceGG: 81,
+    priceFA: 110,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-portuguesa.png',
@@ -275,6 +295,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 54,
     priceG: 69,
     priceGG: 86,
+    priceFA: 117,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-bata-frita.png',
@@ -288,6 +309,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceM: 50,
     priceG: 67,
     priceGG: 84,
+    priceFA: 114,
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-4-queijos.png',
@@ -301,7 +323,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola.png',
     available: true,
-    stock: 0,
+    stock: 10,
     },
   {
     id: 'ab41mss9y',
@@ -445,8 +467,10 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
 ];
 
 export const INITIAL_SETTINGS: AppSettings = {
-  // Aqui o sistema decide: se estiver em 'auto', ele usa o relógio. 
-  // Se você mudar lá em cima para 'open' ou 'closed', ele obedece você!
+  // --- CONFIGURAÇÃO DO CARTAZ DE DIA DAS MÃES ---
+  showAdCartaz: true, // Mude para false para esconder o cartaz quando a promoção acabar
+  adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/informativo.avif', // Link da imagem hospedada na Oracle Cloud
+  // ----------------------------------------------
   isOpen: MANUAL_CONTROL === 'open' ? true : 
           MANUAL_CONTROL === 'closed' ? false : 
           checkAutomaticOpening(),
@@ -469,20 +493,31 @@ export const INITIAL_SETTINGS: AppSettings = {
     {
       id: 'promo-coca', // Entre aspas para ser uma string
       active: false,
+      isClickable: true,
       title: 'PROMOÇÃO FAMÍLIA GG',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/promocao-coca-cola.avif',
       price: 164.90,
-      freeDelivery: false,
+      freeDelivery: true,
       description: 'Aqui você leva 16 pedaços de pizza + Coca Cola 2L GRÁTIS!'
-      
     },
     {
       id: 'promo-coroa', // Entre aspas para ser uma string
       active: false,
+      isClickable: true,
       title: 'PROMOÇÃO FAMÍLIA G',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/promocao-coroa.avif', // Link da imagem que criamos
       price: 129.90,
-      freeDelivery: true,
+      freeDelivery: false,
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+  },
+    {
+      id: 'infor-1', // Entre aspas para ser uma string
+      active: true,
+      isClickable: false,
+      title: 'PROMOÇÃO FAMÍLIA G',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/informativo1.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: false,
       description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
     }
   ],

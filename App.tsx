@@ -21,6 +21,8 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
   const [splashText, setSplashText] = useState("Bem-vindo à Pizzaria Barcellos");
+  // --- NOVA VARIÁVEL PARA O CARTAZ ---
+  const [showAd, setShowAd] = useState(false);
 
 useEffect(() => {
     const phrases = [
@@ -41,13 +43,18 @@ useEffect(() => {
     const forceOpenTimer = setTimeout(() => {
       setShowSplash(false);
       setLoading(false);
-    }, 4000); // 4 segundos de splash é o ideal
+      
+      // Se a chave for true lá no INITIAL_SETTINGS, ele ativa o cartaz aqui
+      if (settings.showAdCartaz) {
+        setShowAd(true);
+      }
+    }, 4000);
 
     return () => {
       clearInterval(phraseInterval);
       clearTimeout(forceOpenTimer);
     };
-  }, []);
+  }, [settings]); // <--- MUDE AQUI: Adicione 'settings' dentro dos colchetes
 
   const handleLogoClick = () => {
     setLogoClicks(prev => {
@@ -195,6 +202,58 @@ const itemsText = orderData.items?.map(item => {
     );
   }
 
+ // PARTE 2: COLE O BLOCO DO CARTAZ EXATAMENTE AQUI
+if (showAd && settings.showAdCartaz) {
+    return (
+      <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 overflow-hidden bg-black">
+        
+        {/* Fundo Forçado com CSS Inline - Pizzaria Barcellos */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: `url('https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/fundosite.webp')`,
+            opacity: '0.4',
+            filter: 'blur(6px)',
+            WebkitFilter: 'blur(6px)',
+            zIndex: 0
+          }} 
+        />
+
+        {/* Camada de Contraste */}
+        <div className="absolute inset-0 bg-black/50 z-[1]" />
+        
+        <div className="relative z-[10] w-full max-w-[92%] sm:max-w-md mx-auto animate-in fade-in zoom-in duration-500 flex flex-col items-center">
+          
+          {/* TÍTULO DE AVISOS */}
+          <div className="text-center mb-4">
+            <h2 className="text-white text-xl font-black uppercase tracking-[0.3em] drop-shadow-lg">
+              Avisos
+            </h2>
+            <div className="w-10 h-1 bg-red-600 mx-auto mt-1 rounded-full"></div>
+          </div>
+
+          {/* Container do Cartaz */}
+          <div className="w-full rounded-[1.5rem] border-2 border-white/10 shadow-2xl bg-zinc-900/60 overflow-visible flex justify-center">
+            <img 
+              src={settings.adCartazLink} 
+              alt="Campanha Dia das Mães" 
+              className="w-full h-auto max-h-[68vh] object-contain shadow-2xl touch-pinch-zoom cursor-zoom-in active:scale-125 transition-transform duration-300" 
+            />
+          </div>
+
+          {/* Botão de Ação Inferior */}
+          <button 
+            onClick={() => setShowAd(false)}
+            className="w-full mt-8 mb-2 bg-red-600 hover:bg-red-700 text-white font-black py-5 rounded-2xl uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 text-base"
+          >
+            ACESSAR CARDÁPIO
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // O SEU CÓDIGO DO ADMIN CONTINUA LOGO ABAIXO:
   if (isAdmin && !isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black p-4 text-white">
