@@ -20,7 +20,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   const [showManualButton, setShowManualButton] = useState(false); // Estado para o botão de segurança
   const [deliveryMessage, setDeliveryMessage] = useState<string | null>(null);
   const [isBlocked, setIsBlocked] = useState(false);
-  
+
   const [addressData, setAddressData] = useState({
     cep: '',
     street: '',
@@ -29,7 +29,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
     bairro: '',
     city: ''
   });
-  
+
   const [formData, setFormData] = useState({
     customerName: '',
     phone: '',
@@ -41,18 +41,18 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   });
 
   const subtotal = items.reduce((acc, i) => acc + i.totalPrice, 0);
-  
+
   const deliveryFee = formData.orderType === 'Retirada' ? 0 : formData.neighborhood.fee;
   const total = subtotal + deliveryFee;
 
   // FUNÇÃO DE MÁSCARA PARA TELEFONE
   const formatPhone = (value: string) => {
     if (!value) return "";
-    const numbers = value.replace(/\D/g, ""); 
-    
+    const numbers = value.replace(/\D/g, "");
+
     if (numbers.length <= 2) return numbers;
     if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
-    
+
     return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
   };
 
@@ -60,7 +60,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
     const formatted = formatPhone(e.target.value);
     setFormData({ ...formData, phone: formatted });
   };
-const handleGetLocation = () => {
+  const handleGetLocation = () => {
     if (!navigator.geolocation) {
       alert("Seu navegador não suporta localização.");
       return;
@@ -78,17 +78,17 @@ const handleGetLocation = () => {
     navigator.geolocation.getCurrentPosition(async (position) => {
       try {
         const { latitude, longitude } = position.coords;
-        
+
         // Usando o serviço gratuito do OpenStreetMap
         const response = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
         );
         const data = await response.json();
-        
+
         if (data.address) {
           // Tenta pegar o CEP (postcode)
           const cepEncontrado = data.address.postcode ? data.address.postcode.replace(/\D/g, '') : '';
-          
+
           // Se achou o CEP, já preenche a rua e o bairro para o cliente não ter dúvida
           if (cepEncontrado) {
             setAddressData(prev => ({
@@ -97,7 +97,7 @@ const handleGetLocation = () => {
               bairro: data.address.suburb || data.address.neighbourhood || prev.bairro,
               city: data.address.city || data.address.town || prev.city
             }));
-            
+
             // Chama sua lógica de CEP para validar as taxas da Barcellos
             handleCepLookup(cepEncontrado);
           } else {
@@ -156,7 +156,7 @@ const handleGetLocation = () => {
 
           // --- BUSCA O BAIRRO NAS CONFIGURAÇÕES ---
           const match = settings.neighborhoods.find(n => n.name.toUpperCase() === bairroUpper);
-          
+
           if (match) {
             // VERIFICA SE O BAIRRO ESTÁ DESATIVADO NO PAINEL
             if ((match as any).active === false) {
@@ -169,9 +169,9 @@ const handleGetLocation = () => {
               setIsBlocked(false);
             }
           } else {
-            setFormData(prev => ({ 
-              ...prev, 
-              neighborhood: { name: data.bairro || 'Geral', fee: settings.defaultDeliveryFee } 
+            setFormData(prev => ({
+              ...prev,
+              neighborhood: { name: data.bairro || 'Geral', fee: settings.defaultDeliveryFee }
             }));
             setIsBlocked(false);
           }
@@ -185,18 +185,18 @@ const handleGetLocation = () => {
   };
 
   const handleNameChange = (val: string) => {
-    setFormData({...formData, customerName: val.toUpperCase()});
+    setFormData({ ...formData, customerName: val.toUpperCase() });
   };
 
-  const fullAddress = formData.orderType === 'Retirada' 
-    ? 'RETIRADA NO BALCÃO' 
+  const fullAddress = formData.orderType === 'Retirada'
+    ? 'RETIRADA NO BALCÃO'
     : `${addressData.street}, ${addressData.number}${addressData.complement ? ` - ${addressData.complement}` : ''}, ${addressData.bairro}, ${addressData.city} (CEP: ${addressData.cep})`;
 
   const handleNext = () => {
     if (step === 1 && items.length === 0) return;
     if (step === 2) {
       const isAddressOk = formData.orderType === 'Retirada' || (addressData.cep && addressData.number);
-      
+
       if (!formData.customerName || !formData.phone || !isAddressOk) {
         alert('Preencha os campos obrigatórios para prosseguir.');
         return;
@@ -221,7 +221,7 @@ const handleGetLocation = () => {
       // --- AJUSTE CIRÚRGICO: Inicia o cronômetro de segurança ---
       setTimeout(() => {
         setShowManualButton(true);
-      }, 4000); 
+      }, 4000);
       // -------------------------------------------------------
 
       // 2. Envia os dados para o App.tsx
@@ -268,7 +268,7 @@ const handleGetLocation = () => {
           ) : (
             <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
               <p className="text-[10px] text-zinc-500 uppercase font-black mb-3">O redirecionamento falhou?</p>
-              <button 
+              <button
                 onClick={handleFinalize}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-black py-4 rounded-2xl transition shadow-xl shadow-green-600/20 uppercase tracking-widest flex items-center justify-center gap-2 text-xs"
               >
@@ -287,13 +287,13 @@ const handleGetLocation = () => {
         <header className="p-6 border-b border-zinc-800 flex justify-between items-center bg-black">
           <div className="flex items-center gap-4">
             {/* BOTÃO DE VOLTAR: Seta para a esquerda para retornar à loja */}
-            <button 
-              onClick={onClose} 
+            <button
+              onClick={onClose}
               className="p-2 bg-zinc-900 border border-zinc-800 rounded-xl hover:bg-red-600 hover:border-red-600 text-zinc-400 hover:text-white transition-all duration-300"
             >
               <ArrowLeft size={22} strokeWidth={3} />
             </button>
-            
+
             <h2 className="text-xl font-black uppercase tracking-tighter">
               {step === 1 ? 'Seu Carrinho' : step === 2 ? 'Dados do Pedido' : 'Pagamento'}
             </h2>
@@ -311,62 +311,89 @@ const handleGetLocation = () => {
                 ) : (
                   <>
                     {items.map((item, idx) => (
-  <div key={idx} className="flex gap-4 bg-black border border-zinc-800 p-4 rounded-3xl group animate-in fade-in slide-in-from-right-4">
-    
-    {/* CONTAINER DA IMAGEM MEIA A MEIA */}
-    <div className="relative w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0 bg-zinc-950">
-      {/* Sabor 1 (ou pizza inteira) */}
-      <img 
-        src={item.product1.image} 
-        className="absolute inset-0 w-full h-full object-cover" 
-        alt={item.product1.name} 
-      />
-      
-      {/* Sabor 2 (aparece apenas se for meio a meio) */}
-      {item.product2 && (
-        <img 
-          src={item.product2.image} 
-          className="absolute inset-0 w-full h-full object-cover" 
-          style={{ clipPath: 'inset(0 0 0 50%)' }} 
-          alt={item.product2.name} 
-        />
-      )}
-      
-      {/* Linha divisória sutil para o efeito visual */}
-      {item.product2 && (
-        <div className="absolute inset-y-0 left-1/2 w-[1px] bg-white/20 z-10" />
-      )}
-    </div>
+                      <div key={idx} className="flex gap-4 bg-black border border-zinc-800 p-4 rounded-3xl group animate-in fade-in slide-in-from-right-4">
 
-    <div className="flex-grow">
-      <h4 className="font-bold text-sm uppercase">
-        {item.product2 ? `1/2 ${item.product1.name} + 1/2 ${item.product2.name}` : item.product1.name}
-      </h4>
-      {item.size && (
-        <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block">
-          {item.size}
-        </span>
-      )}
-      <p className="text-red-500 font-black text-sm mt-1">R$ {item.totalPrice.toFixed(2)}</p>
-    </div>
+                        {/* CONTAINER DA IMAGEM ADAPTADO PARA ATÉ 3 SABORES VISUAIS */}
+                        <div className="relative w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0 bg-zinc-950">
+                          {/* Sabor 1 */}
+                          <img
+                            src={item.product1.image}
+                            className="absolute inset-0 w-full h-full object-cover"
+                            alt={item.product1.name}
+                          />
 
-    <button 
-      onClick={() => onRemove(idx)} 
-      className="text-zinc-700 hover:text-red-500 transition self-center"
-    >
-      <Trash2 size={20} />
-    </button>
-  </div>
-))}
+                          {/* MODO 3 SABORES VISUAL NO CARRINHO */}
+                          {item.product3 ? (
+                            <>
+                              <img
+                                src={item.product2?.image || item.product1.image}
+                                className="absolute inset-0 w-full h-full object-cover"
+                                style={{ clipPath: 'polygon(50% 50%, 100% 75%, 100% 100%, 0% 100%, 0% 75%)' }}
+                                alt={item.product2?.name}
+                              />
+                              <img
+                                src={item.product3.image}
+                                className="absolute inset-0 w-full h-full object-cover"
+                                style={{ clipPath: 'polygon(50% 50%, 0% 75%, 0% 0%, 50% 0%)' }}
+                                alt={item.product3.name}
+                              />
+                            </>
+                          ) : item.product2 ? (
+                            /* MODO MEIO A MEIO TRADICIONAL */
+                            <img
+                              src={item.product2.image}
+                              className="absolute inset-0 w-full h-full object-cover"
+                              style={{ clipPath: 'inset(0 0 0 50%)' }}
+                              alt={item.product2.name}
+                            />
+                          ) : null}
 
+                          {/* Linhas divisórias inteligentes para as miniaturas */}
+                          {item.product3 ? (
+                            <div className="absolute inset-0 z-10 pointer-events-none opacity-40">
+                              <div className="absolute top-0 left-1/2 bottom-1/2 w-[1px] bg-white" />
+                              <div className="absolute top-1/2 left-1/2 w-1/2 h-[1px] bg-white origin-left rotate-[30deg]" />
+                              <div className="absolute top-1/2 left-0 w-1/2 h-[1px] bg-white origin-right rotate-[-30deg]" />
+                            </div>
+                          ) : item.product2 ? (
+                            <div className="absolute inset-y-0 left-1/2 w-[1px] bg-white/20 z-10" />
+                          ) : null}
+                        </div>
+
+                        {/* TEXTO DO TÍTULO TOTALMENTE ATUALIZADO EM FRAÇÕES */}
+                        <div className="flex-grow">
+                          <h4 className="font-bold text-sm uppercase leading-tight text-white">
+                            {item.product3
+                              ? `1/3 ${item.product1.name} + 1/3 ${item.product2?.name || '...'} + 1/3 ${item.product3.name}`
+                              : item.product2
+                                ? `1/2 ${item.product1.name} + 1/2 ${item.product2.name}`
+                                : item.product1.name
+                            }
+                          </h4>
+                          {item.size && (
+                            <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mt-0.5">
+                              {item.size}
+                            </span>
+                          )}
+                          <p className="text-red-500 font-black text-sm mt-1">R$ {item.totalPrice.toFixed(2).replace('.', ',')}</p>
+                        </div>
+
+                        <button
+                          onClick={() => onRemove(idx)}
+                          className="text-zinc-700 hover:text-red-500 transition self-center"
+                        >
+                          <Trash2 size={20} />
+                        </button>
+                      </div>
+                    ))}
                     {/* --- CAMPO DE OBSERVAÇÃO ESTRATÉGICO --- */}
                     <div className="mt-8 border-t border-zinc-800 pt-6 animate-in fade-in zoom-in-95">
                       <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-3 block ml-2">
                         Alguma observação no pedido?
                       </label>
-                      <textarea 
+                      <textarea
                         value={formData.observation}
-                        onChange={e => setFormData({...formData, observation: e.target.value})}
+                        onChange={e => setFormData({ ...formData, observation: e.target.value })}
                         className="w-full bg-black border border-zinc-800 p-5 rounded-[2rem] outline-none focus:border-red-600 transition text-white text-sm min-h-[100px] resize-none placeholder:text-zinc-700"
                         placeholder="Ex: Tirar cebola, massa bem assada, campainha estragada..."
                       />
@@ -382,7 +409,7 @@ const handleGetLocation = () => {
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
-                  onClick={() => { setFormData({...formData, orderType: 'Entrega'}); setIsBlocked(addressData.bairro ? isBlocked : false); }}
+                  onClick={() => { setFormData({ ...formData, orderType: 'Entrega' }); setIsBlocked(addressData.bairro ? isBlocked : false); }}
                   className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${formData.orderType === 'Entrega' ? 'border-red-600 bg-red-600/10 text-white' : 'border-zinc-800 text-zinc-500 opacity-50'}`}
                 >
                   <Truck size={24} />
@@ -390,7 +417,7 @@ const handleGetLocation = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setFormData({...formData, orderType: 'Retirada'}); setIsBlocked(false); }}
+                  onClick={() => { setFormData({ ...formData, orderType: 'Retirada' }); setIsBlocked(false); }}
                   className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${formData.orderType === 'Retirada' ? 'border-red-600 bg-red-600/10 text-white' : 'border-zinc-800 text-zinc-500 opacity-50'}`}
                 >
                   <ShoppingBag size={24} />
@@ -402,63 +429,63 @@ const handleGetLocation = () => {
                 <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Nome Completo</label>
                 <input type="text" value={formData.customerName} onChange={e => handleNameChange(e.target.value)} className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition uppercase font-bold text-white" placeholder="SEU NOME" />
               </div>
-              
+
               <div>
                 <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">WhatsApp</label>
-                <input 
-                  type="tel" 
-                  value={formData.phone} 
-                  onChange={handlePhoneChange} 
-                  maxLength={15} 
-                  className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition font-bold text-white" 
-                  placeholder="(00) 00000-0000" 
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handlePhoneChange}
+                  maxLength={15}
+                  className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition font-bold text-white"
+                  placeholder="(00) 00000-0000"
                 />
               </div>
-              
+
               {formData.orderType === 'Entrega' && (
                 <div className="border-t border-zinc-800 pt-6 animate-in fade-in slide-in-from-top-4 duration-300">
                   <h3 className="text-xs font-black uppercase tracking-widest text-red-600 mb-4 flex items-center gap-2">
                     <MapPin size={14} /> Local de Entrega
                   </h3>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
-  <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">1. Digite seu CEP</label>
-  <div className="relative">
-    <input 
-      type="text" 
-      maxLength={8} 
-      value={addressData.cep} 
-      onChange={e => handleCepLookup(e.target.value)} 
-      className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition font-mono tracking-widest text-lg text-white" 
-      placeholder="00000000" 
-    />
-    {loadingCep && <Loader2 className="absolute right-4 top-4 animate-spin text-red-600" />}
-  </div>
+                      <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">1. Digite seu CEP</label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          maxLength={8}
+                          value={addressData.cep}
+                          onChange={e => handleCepLookup(e.target.value)}
+                          className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition font-mono tracking-widest text-lg text-white"
+                          placeholder="00000000"
+                        />
+                        {loadingCep && <Loader2 className="absolute right-4 top-4 animate-spin text-red-600" />}
+                      </div>
 
-  {/* PASSO 2: PARA QUEM NÃO SABE O CEP - ADICIONADO AQUI */}
-  <div className="mt-4 flex flex-col items-center">
-    <div className="flex items-center gap-3 w-full mb-3 px-2">
-      <div className="h-px flex-grow bg-zinc-800"></div>
-      <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">Ou se não souber</span>
-      <div className="h-px flex-grow bg-zinc-800"></div>
-    </div>
-    
-    <button
-      type="button"
-      onClick={handleGetLocation}
-      disabled={loadingLocation || loadingCep}
-      className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl border border-dashed border-zinc-800 bg-zinc-900/30 hover:border-red-600 hover:bg-red-600/5 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all active:scale-95"
-    >
-      {loadingLocation ? (
-        <Loader2 className="animate-spin text-red-600" size={14} />
-      ) : (
-        <MapPin size={14} className="text-red-600" />
-      )}
-      {loadingLocation ? "Localizando..." : "2. Pedir pela minha localização atual"}
-    </button>
-  </div>
-</div>
+                      {/* PASSO 2: PARA QUEM NÃO SABE O CEP - ADICIONADO AQUI */}
+                      <div className="mt-4 flex flex-col items-center">
+                        <div className="flex items-center gap-3 w-full mb-3 px-2">
+                          <div className="h-px flex-grow bg-zinc-800"></div>
+                          <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">Ou se não souber</span>
+                          <div className="h-px flex-grow bg-zinc-800"></div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={handleGetLocation}
+                          disabled={loadingLocation || loadingCep}
+                          className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl border border-dashed border-zinc-800 bg-zinc-900/30 hover:border-red-600 hover:bg-red-600/5 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all active:scale-95"
+                        >
+                          {loadingLocation ? (
+                            <Loader2 className="animate-spin text-red-600" size={14} />
+                          ) : (
+                            <MapPin size={14} className="text-red-600" />
+                          )}
+                          {loadingLocation ? "Localizando..." : "2. Pedir pela minha localização atual"}
+                        </button>
+                      </div>
+                    </div>
 
                     {deliveryMessage && (
                       <div className={`col-span-2 p-4 rounded-2xl flex items-start gap-3 animate-in fade-in zoom-in-95 ${isBlocked ? 'bg-red-600/20 text-red-500 border border-red-600' : 'bg-green-600/20 text-green-500 border border-green-600'}`}>
@@ -466,7 +493,7 @@ const handleGetLocation = () => {
                         <p className="text-sm font-bold uppercase leading-tight">{deliveryMessage}</p>
                       </div>
                     )}
-                    
+
                     <div className="col-span-2">
                       <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Rua / Logradouro</label>
                       <input type="text" value={addressData.street} readOnly className="w-full bg-zinc-800/30 border border-zinc-800 p-4 rounded-2xl outline-none text-zinc-400" />
@@ -474,11 +501,11 @@ const handleGetLocation = () => {
 
                     <div>
                       <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Número</label>
-                      <input type="text" value={addressData.number} onChange={e => setAddressData({...addressData, number: e.target.value})} className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition text-white" placeholder="123" />
+                      <input type="text" value={addressData.number} onChange={e => setAddressData({ ...addressData, number: e.target.value })} className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition text-white" placeholder="123" />
                     </div>
                     <div>
                       <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Complemento</label>
-                      <input type="text" value={addressData.complement} onChange={e => setAddressData({...addressData, complement: e.target.value})} className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition text-white" placeholder="Ap 101" />
+                      <input type="text" value={addressData.complement} onChange={e => setAddressData({ ...addressData, complement: e.target.value })} className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition text-white" placeholder="Ap 101" />
                     </div>
                   </div>
                 </div>
@@ -498,7 +525,7 @@ const handleGetLocation = () => {
                 <button
                   key={method.id}
                   type="button"
-                  onClick={() => setFormData({...formData, paymentMethod: method.id})}
+                  onClick={() => setFormData({ ...formData, paymentMethod: method.id })}
                   className={`w-full flex items-center gap-4 p-5 rounded-3xl border-2 transition ${formData.paymentMethod === method.id ? 'bg-red-600/10 border-red-600 text-white' : 'bg-black border-zinc-800 text-zinc-500 hover:border-zinc-700'}`}
                 >
                   <div className={formData.paymentMethod === method.id ? 'text-red-500' : ''}>{method.icon}</div>
@@ -509,7 +536,7 @@ const handleGetLocation = () => {
               {formData.paymentMethod === 'Dinheiro' && (
                 <div className="mt-6 animate-in fade-in slide-in-from-top-2">
                   <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block text-white">Troco para quanto?</label>
-                  <input type="text" value={formData.changeFor} onChange={e => setFormData({...formData, changeFor: e.target.value})} className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition text-white" placeholder="Ex: R$ 100,00" />
+                  <input type="text" value={formData.changeFor} onChange={e => setFormData({ ...formData, changeFor: e.target.value })} className="w-full bg-black border border-zinc-800 p-4 rounded-2xl outline-none focus:border-red-600 transition text-white" placeholder="Ex: R$ 100,00" />
                 </div>
               )}
             </div>
@@ -540,7 +567,7 @@ const handleGetLocation = () => {
                 <ArrowLeft size={24} />
               </button>
             )}
-            <button 
+            <button
               type="button"
               onClick={step === 3 ? handleFinalize : handleNext}
               disabled={items.length === 0 || (step === 2 && formData.orderType === 'Entrega' && isBlocked) || isSubmitting}

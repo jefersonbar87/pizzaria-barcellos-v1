@@ -15,7 +15,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     createdAt: '2026-04-02',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-bacon-chef.avif',
     available: true,
-  }, 
+  },
   {
     id: '4yarcellu',
     index: 11,
@@ -132,7 +132,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-mista.png',
     available: true,
- },
+  },
   {
     id: '1x6tu1u6s',
     index: 1,
@@ -146,7 +146,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-mucarela.png',
     available: true,
- },
+  },
   {
     id: '5pjeg4wwn',
     index: 4,
@@ -160,7 +160,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-calabresa.png',
     available: true,
- },
+  },
   {
     id: '6m1ab7eh4',
     index: 3,
@@ -174,7 +174,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-frango.png',
     available: true,
- },
+  },
   {
     id: '6qti9nfvd',
     index: 14,
@@ -188,8 +188,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-carioca.png',
     available: true,
- },
- {
+  },
+  {
     id: 'lm6xkyo4u',
     index: 15,
     name: 'PIZZA MAGIORDANO',
@@ -202,7 +202,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-magiordano.png',
     available: true,
- },
+  },
   {
     id: '9bcnh8zs1',
     index: 7,
@@ -258,7 +258,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-lombo-canadense.png',
     available: true,
- },
+  },
   {
     id: '70h7ydc8g',
     index: 20,
@@ -272,7 +272,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-juparana.png',
     available: true,
- },
+  },
   {
     id: 'm1h1jsim4',
     index: 21,
@@ -286,7 +286,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-portuguesa.png',
     available: true,
- },
+  },
   {
     id: 'tguituk21',
     index: 22,
@@ -300,7 +300,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-bata-frita.png',
     available: true,
- },
+  },
   {
     id: 'ujfiuq9r9',
     index: 18,
@@ -314,7 +314,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-4-queijos.png',
     available: true,
- },
+  },
   {
     id: 'cy41mut6y',
     name: 'REFRIGERANTE COCA COLA 2L',
@@ -324,7 +324,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola.png',
     available: true,
     stock: 10,
-    },
+  },
   {
     id: 'ab41mss9y',
     name: 'REFRIGERANTE COCA COLA 1,5L',
@@ -334,7 +334,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola1,5l.avif',
     available: true,
     stock: 10,
-},
+  },
   {
     id: 'cy41muz9y',
     name: 'REFRIGERANTE COCA COLA ZERO 1,5L',
@@ -344,7 +344,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cocazero.jpg',
     available: true,
     stock: 10,
-},
+  },
 
   {
     id: '6oglq4b39',
@@ -355,7 +355,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola-lata.avif',
     available: true,
     stock: 10,
-},  
+  },
   {
     id: '7oglY4b53',
     name: 'REFRIGERANTE COCA COLA ZERO LATA 350ML',
@@ -365,9 +365,9 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola-lata-zero.avif',
     available: true,
     stock: 10,
-},   
-  
-    {
+  },
+
+  {
     id: '6oglqAP39',
     name: 'REFRIGERANTE COCA COLA 600ML',
     description: 'Refrigerante 600ml gelado',
@@ -376,7 +376,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola-600ml.png',
     available: true,
     stock: 10,
-},
+  },
   {
     id: 'pilarlssq',
     name: 'REFRIGERANTE COROA LARANJA 2L',
@@ -386,7 +386,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coroa-laranja.avif',
     available: true,
     stock: 10,
-},
+  },
   {
     id: 'piuval1iq',
     name: 'REFRIGERANTE COROA UVA 2L',
@@ -396,7 +396,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/Coroa-uva.png',
     available: true,
     stock: 10,
-},
+  },
   {
     id: 'thot6jw4a',
     name: 'REFRIGERANTE COROA GUARANÁ 2L',
@@ -406,7 +406,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/Coroa-Guarana.png',
     available: true,
     stock: 10,
-},
+  },
   {
     id: '7zif3shpk',
     name: 'REFRIGERANTE COROA LIMÃO 2L',
@@ -416,7 +416,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/Coroa-Limão.png',
     available: true,
     stock: 10,
-},
+  },
   {
     id: 'thot5lw4a',
     name: 'REFRIGERANTE COROA GUARANÁ 1,5L',
@@ -426,14 +426,14 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/guarana-coroa-1.5L.avif',
     available: true,
     stock: 10,
-  }  
+  }
 ];
 
 // 1. Controle Manual (A CHAVE DA LOJA)
 // Mude para 'auto' para o robô abrir sozinho no horário
 // Mude para 'open' para forçar o site a ficar ABERTO
 // Mude para 'closed' para forçar o site a ficar FECHADO
-const MANUAL_CONTROL = 'auto' as 'auto' | 'open' | 'closed'; 
+const MANUAL_CONTROL = 'auto' as 'auto' | 'open' | 'closed';
 
 // 2. Lógica de horário automática
 const checkAutomaticOpening = () => {
@@ -471,9 +471,9 @@ export const INITIAL_SETTINGS: AppSettings = {
   showAdCartaz: true, // Mude para false para esconder o cartaz quando a promoção acabar
   adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/informativo.avif', // Link da imagem hospedada na Oracle Cloud
   // ----------------------------------------------
-  isOpen: MANUAL_CONTROL === 'open' ? true : 
-          MANUAL_CONTROL === 'closed' ? false : 
-          checkAutomaticOpening(),
+  isOpen: MANUAL_CONTROL === 'open' ? true :
+    MANUAL_CONTROL === 'closed' ? false :
+      checkAutomaticOpening(),
 
   closedMode: 'hide-menu',
   closeMessage: 'NESTE MOMENTO ESTAMOS FECHADOS, NOSSO ATENDIMENTO É DE 18:00H ÀS 23:30H',
@@ -509,7 +509,7 @@ export const INITIAL_SETTINGS: AppSettings = {
       price: 129.90,
       freeDelivery: false,
       description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
-  },
+    },
     {
       id: 'infor-1', // Entre aspas para ser uma string
       active: true,
@@ -521,7 +521,7 @@ export const INITIAL_SETTINGS: AppSettings = {
       description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
     }
   ],
-  
+
   // Acrescentando as informações de rodapé solicitadas
   registeredTrademark: 'Marca Registrada',
   producedBy: 'Produzido por JefTecnologias'
