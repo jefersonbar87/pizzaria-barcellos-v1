@@ -433,7 +433,7 @@ export const INITIAL_PRODUCTS: Product[] = [
 // Mude para 'auto' para o robô abrir sozinho no horário
 // Mude para 'open' para forçar o site a ficar ABERTO
 // Mude para 'closed' para forçar o site a ficar FECHADO
-const MANUAL_CONTROL = 'auto' as 'auto' | 'open' | 'closed';
+const MANUAL_CONTROL = 'auto' as 'auto' | 'open' | 'closed'; // AQUI VOCE ABRE E FECHA A PAGINA
 
 // 2. Lógica de horário automática
 const checkAutomaticOpening = () => {
@@ -467,7 +467,7 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
 ];
 
 export const INITIAL_SETTINGS: AppSettings = {
-  // --- CONFIGURAÇÃO DO CARTAZ DE DIA DAS MÃES ---
+  // --- CONFIGURAÇÃO DO CARTAZ  ---
   showAdCartaz: true, // Mude para false para esconder o cartaz quando a promoção acabar
   adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/informativo.avif', // Link da imagem hospedada na Oracle Cloud
   // ----------------------------------------------
@@ -492,35 +492,66 @@ export const INITIAL_SETTINGS: AppSettings = {
   promotions: [
     {
       id: 'promo-coca', // Entre aspas para ser uma string
-      active: false,
-      isClickable: true,
+      active: false, // AQUI VC ATIVA E DESATIVA
+      isClickable: true, // AQUI VC ATIVA O VALOR
       title: 'PROMOÇÃO FAMÍLIA GG',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/promocao-coca-cola.avif',
       price: 164.90,
-      freeDelivery: true,
+      freeDelivery: true, // SELO DE ENTREGA GRATIS
       description: 'Aqui você leva 16 pedaços de pizza + Coca Cola 2L GRÁTIS!'
     },
     {
       id: 'promo-coroa', // Entre aspas para ser uma string
-      active: false,
-      isClickable: true,
+      active: false, // AQUI VC ATIVA E DESATIVA 
+      isClickable: true, // AQUI VC ATIVA O VALOR
       title: 'PROMOÇÃO FAMÍLIA G',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/promocao-coroa.avif', // Link da imagem que criamos
       price: 129.90,
-      freeDelivery: false,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
       description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
     },
     {
       id: 'infor-1', // Entre aspas para ser uma string
-      active: true,
-      isClickable: false,
+      active: true, // AQUI VC ATIVA E DESATIVA
+      isClickable: false, // AQUI VC ATIVA O VALOR
       title: 'PROMOÇÃO FAMÍLIA G',
-      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/informativo1.avif', // Link da imagem que criamos
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaz1.avif', // Link da imagem que criamos
       price: 129.90,
-      freeDelivery: false,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+    },
+    {
+      id: 'infor-1', // Entre aspas para ser uma string
+      active: true, // AQUI VC ATIVA E DESATIVA
+      isClickable: false, // AQUI VC ATIVA O VALOR
+      title: 'PROMOÇÃO FAMÍLIA G',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaz2.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+    },
+    {
+      id: 'infor-1', // Entre aspas para ser uma string
+      active: true, // AQUI VC ATIVA E DESATIVA
+      isClickable: false, // AQUI VC ATIVA O VALOR
+      title: 'PROMOÇÃO FAMÍLIA G',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaz3.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+    },
+    {
+      id: 'infor-1', // Entre aspas para ser uma string
+      active: true, // AQUI VC ATIVA E DESATIVA
+      isClickable: false, // AQUI VC ATIVA O VALOR
+      title: 'PROMOÇÃO FAMÍLIA G',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaz4.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
       description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
     }
   ],
+
 
   // Acrescentando as informações de rodapé solicitadas
   registeredTrademark: 'Marca Registrada',
