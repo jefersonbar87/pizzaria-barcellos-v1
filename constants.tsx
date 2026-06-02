@@ -468,7 +468,7 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
 
 export const INITIAL_SETTINGS: AppSettings = {
   // --- CONFIGURAÇÃO DO CARTAZ  ---
-  showAdCartaz: true, // Mude para false para esconder o cartaz quando a promoção acabar
+  showAdCartaz: false, // Mude para false para esconder o cartaz quando a promoção acabar
   adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/informativo.avif', // Link da imagem hospedada na Oracle Cloud
   // ----------------------------------------------
   isOpen: MANUAL_CONTROL === 'open' ? true :
