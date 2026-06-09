@@ -3,7 +3,7 @@ import { Product, Neighborhood, AppSettings } from './types';
 export const INITIAL_PRODUCTS: Product[] = [
   {
     id: '7gn3dyjhu',
-    index: 10,
+    index: 10.5,
     name: 'PIZZA BACON CHEF',
     description: 'Muçarela, bacon, catupiry, azeitona e orégano.',
     priceM: 50,
@@ -41,7 +41,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 79,
     priceFA: 107,
     category: 'Pizza',
-    isPremium: true, // <--- COLOQUE EXATAMENTE AQUI
+    isPremium: false, // <--- COLOQUE EXATAMENTE AQUI
     createdAt: '2026-04-02',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-siciliana.avif',
     available: true,
@@ -86,7 +86,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 81,
     priceFA: 110,
     category: 'Pizza',
-    isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
+    isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     //createdAt: '2026-03-20', pizza ja inclusa
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/%2Fpizza-kanalx.avif',
     available: true,
@@ -199,7 +199,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 80,
     priceFA: 108,
     category: 'Pizza',
-    isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
+    isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-magiordano.png',
     available: true,
   },
@@ -220,14 +220,14 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'alqbiz8an',
     index: 16,
-    name: 'PIZZA Á MODA DA CASA',
+    name: 'PIZZA À MODA DA CASA',
     description: 'Muçarela, frango, palmito, cebola, catupiry, milho, azeitona e orégano.',
     priceM: 50,
     priceG: 65,
     priceGG: 80,
     priceFA: 108,
     category: 'Pizza',
-    isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
+    isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-a-moda-da-casa.png',
     available: true,
   },
@@ -283,7 +283,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceGG: 81,
     priceFA: 110,
     category: 'Pizza',
-    isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
+    isPremium: false, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-portuguesa.png',
     available: true,
   },
@@ -313,6 +313,81 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Pizza',
     isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pizza-4-queijos.png',
+    available: true,
+  },
+  {
+    id: '9yaJrKwiu',
+    index: 10,
+    name: 'PIZZA DE CAMARÃO',
+    description: 'Muçarela, camarão, tomate, azeitonas e orégano.',
+    priceM: 53,
+    priceG: 72,
+    priceGG: 89,
+    priceFA: 120,
+    category: 'Pizza',
+    isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
+    createdAt: '2026-04-02',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/camarao.avif',
+    available: true,
+  },
+  {
+    id: '1ya8rOIiu',
+    index: 10.1,
+    name: 'PIZZA DE CAMARÃO CREMOSO',
+    description: 'Muçarela, camarão, milho, catupiry, azeitonas e orégano.',
+    priceM: 55,
+    priceG: 74,
+    priceGG: 93,
+    priceFA: 124,
+    category: 'Pizza',
+    isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
+    createdAt: '2026-04-02',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/camaraocremoso.avif',
+    available: true,
+  },
+  {
+    id: '6ya6Uywiu',
+    index: 10.2,
+    name: 'PIZZA ITALIANA',
+    description: 'Muçarela, camarão, milho, palmito, azeitonas e orégano.',
+    priceM: 54,
+    priceG: 73,
+    priceGG: 91,
+    priceFA: 122,
+    category: 'Pizza',
+    isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
+    createdAt: '2026-04-02',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/italiana.avif',
+    available: true,
+  },
+  {
+    id: '3ya0Pywiu',
+    index: 10.3,
+    name: 'PIZZA SABOROSA',
+    description: 'Muçarela, peito de peru, ovo, catupiry, milho, azeitonas e orégano.',
+    priceM: 51,
+    priceG: 68,
+    priceGG: 86,
+    priceFA: 114,
+    category: 'Pizza',
+    isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
+    createdAt: '2026-04-02',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/saborosa.avif',
+    available: true,
+  },
+  {
+    id: '4ya9rySiu',
+    index: 10.4,
+    name: 'PIZZA DE PEPPERONI',
+    description: 'Muçarela, pepperoni, azeitonas e orégano.',
+    priceM: 50,
+    priceG: 66,
+    priceGG: 84,
+    priceFA: 113,
+    category: 'Pizza',
+    isPremium: true, // <--- COLOQUE EXATAMENTE AQUI 
+    createdAt: '2026-04-02',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/pepperoni.avif',
     available: true,
   },
   {
@@ -468,15 +543,15 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
 
 export const INITIAL_SETTINGS: AppSettings = {
   // --- CONFIGURAÇÃO DO CARTAZ  ---
-  showAdCartaz: false, // Mude para false para esconder o cartaz quando a promoção acabar
-  adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/informativo.avif', // Link da imagem hospedada na Oracle Cloud
+  showAdCartaz: true, // Mude para false para esconder o cartaz quando a promoção acabar
+  adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazz.avif', // Link da imagem hospedada na Oracle Cloud
   // ----------------------------------------------
   isOpen: MANUAL_CONTROL === 'open' ? true :
     MANUAL_CONTROL === 'closed' ? false :
       checkAutomaticOpening(),
 
   closedMode: 'hide-menu',
-  closeMessage: 'NESTE MOMENTO ESTAMOS FECHADOS, NOSSO ATENDIMENTO É DE 18:00H ÀS 23:30H',
+  closeMessage: 'NESTE MOMENTO ESTAMOS FECHADOS, ATENDEMOS DAS 18:00H ÀS 23:30H',
   neighborhoods: INITIAL_NEIGHBORHOODS,
   blockedNeighborhoods: 'Bagueira, Rio Quartel, Bebedouro, Residencial Rio Doce, Bairro Perigoso, Invasão',
   defaultDeliveryFee: 4,
@@ -514,38 +589,68 @@ export const INITIAL_SETTINGS: AppSettings = {
       id: 'infor-1', // Entre aspas para ser uma string
       active: true, // AQUI VC ATIVA E DESATIVA
       isClickable: false, // AQUI VC ATIVA O VALOR
-      title: 'PROMOÇÃO FAMÍLIA G',
+      title: '5 NOVOS SABORES',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cincosabores.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+    },
+    {
+      id: 'infor-2', // Entre aspas para ser uma string
+      active: true, // AQUI VC ATIVA E DESATIVA
+      isClickable: false, // AQUI VC ATIVA O VALOR
+      title: 'PIZZA DE CAMARÃO',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazcamarao.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+    },
+    {
+      id: 'infor-3', // Entre aspas para ser uma string
+      active: true, // AQUI VC ATIVA E DESATIVA
+      isClickable: false, // AQUI VC ATIVA O VALOR
+      title: 'PIZZA CAMARAO CREMOSO',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazcamaraocremoso.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+    },
+    {
+      id: 'infor-4', // Entre aspas para ser uma string
+      active: true, // AQUI VC ATIVA E DESATIVA
+      isClickable: false, // AQUI VC ATIVA O VALOR
+      title: 'PIZZA ITALIANA',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazitaliana.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+    },
+    {
+      id: 'infor-5', // Entre aspas para ser uma string
+      active: true, // AQUI VC ATIVA E DESATIVA
+      isClickable: false, // AQUI VC ATIVA O VALOR
+      title: 'PIZZA SABOROSA',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazsaborosa.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+    },
+    {
+      id: 'infor-6', // Entre aspas para ser uma string
+      active: true, // AQUI VC ATIVA E DESATIVA
+      isClickable: false, // AQUI VC ATIVA O VALOR
+      title: 'PIZZA PEPPERONI',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazpepperoni.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+    },
+    {
+      id: 'infor', // Entre aspas para ser uma string
+      active: true, // AQUI VC ATIVA E DESATIVA
+      isClickable: false, // AQUI VC ATIVA O VALOR
+      title: 'TAMANHOS DAS PIZZAS',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaz1.avif', // Link da imagem que criamos
-      price: 129.90,
-      freeDelivery: false, // SELO DE ENTREGA GRATIS
-      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
-    },
-    {
-      id: 'infor-1', // Entre aspas para ser uma string
-      active: true, // AQUI VC ATIVA E DESATIVA
-      isClickable: false, // AQUI VC ATIVA O VALOR
-      title: 'PROMOÇÃO FAMÍLIA G',
-      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaz2.avif', // Link da imagem que criamos
-      price: 129.90,
-      freeDelivery: false, // SELO DE ENTREGA GRATIS
-      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
-    },
-    {
-      id: 'infor-1', // Entre aspas para ser uma string
-      active: true, // AQUI VC ATIVA E DESATIVA
-      isClickable: false, // AQUI VC ATIVA O VALOR
-      title: 'PROMOÇÃO FAMÍLIA G',
-      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaz3.avif', // Link da imagem que criamos
-      price: 129.90,
-      freeDelivery: false, // SELO DE ENTREGA GRATIS
-      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
-    },
-    {
-      id: 'infor-1', // Entre aspas para ser uma string
-      active: true, // AQUI VC ATIVA E DESATIVA
-      isClickable: false, // AQUI VC ATIVA O VALOR
-      title: 'PROMOÇÃO FAMÍLIA G',
-      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaz4.avif', // Link da imagem que criamos
       price: 129.90,
       freeDelivery: false, // SELO DE ENTREGA GRATIS
       description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'

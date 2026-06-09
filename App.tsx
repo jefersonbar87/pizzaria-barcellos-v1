@@ -4,7 +4,8 @@ import { INITIAL_PRODUCTS, INITIAL_SETTINGS, CONTACT_WHATSAPP, INSTAGRAM_URL } f
 import AdminDashboard from './components/AdminDashboard';
 import MenuList from './components/MenuList';
 import CartModal from './components/CartModal';
-import { ShoppingCart, Instagram, MapPin, Search, CheckCircle2, MessageCircle, ArrowLeft, Mail, Lock, Pizza } from 'lucide-react';
+// Importei o ícone Clock para deixarmos a nossa modal de agendamento bem profissional
+import { ShoppingCart, Instagram, MapPin, Search, CheckCircle2, MessageCircle, ArrowLeft, Mail, Lock, Pizza, Clock } from 'lucide-react';
 
 const App: React.FC = () => {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
@@ -21,8 +22,19 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
   const [splashText, setSplashText] = useState("Bem-vindo à Pizzaria Barcellos");
-  // --- NOVA VARIÁVEL PARA O CARTAZ ---
   const [showAd, setShowAd] = useState(false);
+
+  // --- NOVAS VARIÁVEIS PARA O AGENDAMENTO DE PEDIDOS ---
+  const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState(false);
+  const [scheduleHour, setScheduleHour] = useState('19');
+  const [scheduleMinute, setScheduleMinute] = useState('00');
+  const [scheduledTime, setScheduledTime] = useState<string | null>(null);
+
+  const availableHours = ['18', '19', '20', '21', '22', '23'];
+  const availableMinutes = ['00', '10', '20', '30', '40', '50'];
+
+  // Variável inteligente: O sistema "abre" se a loja estiver aberta normal, se for admin, OU se houver um agendamento em andamento
+  const canOrder = settings.isOpen || isOrderingAsAdmin || !!scheduledTime;
 
   useEffect(() => {
     const phrases = [
@@ -39,12 +51,10 @@ const App: React.FC = () => {
       setSplashText(phrases[currentPhrase]);
     }, 3000);
 
-    // Removemos a busca no banco de dados e deixamos apenas o timer do Splash
     const forceOpenTimer = setTimeout(() => {
       setShowSplash(false);
       setLoading(false);
 
-      // Se a chave for true lá no INITIAL_SETTINGS, ele ativa o cartaz aqui
       if (settings.showAdCartaz) {
         setShowAd(true);
       }
@@ -54,7 +64,7 @@ const App: React.FC = () => {
       clearInterval(phraseInterval);
       clearTimeout(forceOpenTimer);
     };
-  }, [settings]); // <--- MUDE AQUI: Adicione 'settings' dentro dos colchetes
+  }, [settings]);
 
   const handleLogoClick = () => {
     setLogoClicks(prev => {
@@ -64,6 +74,12 @@ const App: React.FC = () => {
       }
       return prev + 1;
     });
+  };
+
+  // Função para validar e confirmar o agendamento
+  const handleConfirmSchedule = () => {
+    setScheduledTime(`${scheduleHour}:${scheduleMinute}`);
+    setIsSchedulingModalOpen(false);
   };
 
   const submitOrder = async (orderData: Partial<Order>) => {
@@ -81,30 +97,24 @@ const App: React.FC = () => {
     const newOrder = { ...orderData, id: orderId, status: 'Pendente', createdAt: Date.now() };
 
     try {
-      // Tentativa de banco silenciosa
       try {
         setOrders(prev => [newOrder as Order, ...prev]);
       } catch (e) {
         console.log("Erro banco ignorado");
       }
 
-      // ✅ 1. ATIVA A MENSAGEM NO CARD
       setShowSuccessMessage(true);
 
       setTimeout(() => {
         if (!isOrderingAsAdmin) {
-          // 1. Formatação dos Itens com a nova lógica de 1/3 para 3 Sabores
           const itemsText = orderData.items?.map(item => {
             let name;
 
             if (item.product3) {
-              // Se houver terceiro sabor, formata como: 1/3 SABOR 1, 1/3 SABOR 2 e 1/3 SABOR 3
               name = `1/3 ${item.product1.name.toUpperCase()}, 1/3 ${item.product2?.name.toUpperCase() || '...'} e 1/3 ${item.product3.name.toUpperCase()}`;
             } else if (item.product2) {
-              // Se tiver apenas dois sabores, mantém o padrão Meio a Meio
               name = `1/2 ${item.product1.name.toUpperCase()} e 1/2 ${item.product2.name.toUpperCase()}`;
             } else {
-              // Se for sabor único, mantém o nome normal
               name = item.product1.name.toUpperCase();
             }
 
@@ -114,41 +124,39 @@ const App: React.FC = () => {
 
           const isRetirada = orderData.orderType === 'Retirada';
           const typeLabel = isRetirada ? "🛵 MODO: RETIRADA" : "🛵 MODO: ENTREGA";
-
-          // Ajuste do Local: Se for retirada, ignora o endereço do cliente
           const addressLabel = isRetirada ? "RETIRADA NO BALCÃO" : orderData.address;
-
           const deliveryFee = orderData.neighborhood?.fee || 0;
           const deliveryFeeText = (isRetirada || deliveryFee === 0) ? "GRÁTIS 🎁" : `R$ ${deliveryFee.toFixed(2)}`;
-
           const subtotal = (orderData.total || 0) - (isRetirada ? 0 : deliveryFee);
           const observationText = orderData.observation ? `\n\n📝 *OBSERVAÇÃO:* ${orderData.observation}` : '';
 
-          // 2. Montagem da Mensagem com o Layout Premium
-          const message = `*PEDIDO PIZZARIA BARCELLOS* 🍕\n🆔 ID: #${orderId}\n\n${typeLabel}\n👤 Cliente: ${orderData.customerName?.toUpperCase()}\n📞 Tel: ${orderData.phone}\n📍 Local: ${addressLabel}${observationText}\n\nITENS:\n${itemsText}\n\n--------------------------\nSubtotal: R$ ${subtotal.toFixed(2)}\nTaxa de Entrega: ${deliveryFeeText}\n*TOTAL: R$ ${orderData.total?.toFixed(2)}*\n--------------------------\n\n💳 Pagamento: ${orderData.paymentMethod?.toUpperCase()}${orderData.changeFor ? `\n💵 Troco para: ${orderData.changeFor}` : ''}`;
+          // AQUI ESTÁ A MÁGICA DO AGENDAMENTO NO WHATSAPP
+          const scheduleText = scheduledTime ? `*Agendamento de pedido para ${scheduledTime}h*\n\n` : '';
+
+          const message = `${scheduleText}*PEDIDO PIZZARIA BARCELLOS* 🍕\n🆔 ID: #${orderId}\n\n${typeLabel}\n👤 Cliente: ${orderData.customerName?.toUpperCase()}\n📞 Tel: ${orderData.phone}\n📍 Local: ${addressLabel}${observationText}\n\nITENS:\n${itemsText}\n\n--------------------------\nSubtotal: R$ ${subtotal.toFixed(2)}\nTaxa de Entrega: ${deliveryFeeText}\n*TOTAL: R$ ${orderData.total?.toFixed(2)}*\n--------------------------\n\n💳 Pagamento: ${orderData.paymentMethod?.toUpperCase()}${orderData.changeFor ? `\n💵 Troco para: ${orderData.changeFor}` : ''}`;
 
           const phone = "5527996183495";
           window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
 
-          // 🔥 AJUSTE AQUI: Espera mais 3 segundos DEPOIS de abrir o Zap para limpar a tela
           setTimeout(() => {
             setShowSuccessMessage(false);
             setIsCartOpen(false);
             setCart([]);
+            // Reseta o agendamento após o pedido
+            setScheduledTime(null);
           }, 3000);
 
         } else {
-          // Se for Admin, apenas fecha a mensagem após o tempo
           setShowSuccessMessage(false);
           setIsCartOpen(false);
         }
-      }, 4000); // 4 segundos de mensagem estática no card antes de agir
+      }, 4000);
 
     } catch (err) {
       console.error(err);
       alert('Erro no processamento.');
     }
-  };// <--- ESSA chave fecha a função e MAIS NADA.
+  };
 
   if (showSplash) {
     return (
@@ -157,18 +165,13 @@ const App: React.FC = () => {
         style={{
           backgroundImage: `url('https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/fundosite.webp')`,
           backgroundSize: '200px',
-          backgroundColor: '#1B431D' // VOLTAMOS COM O SEU VERDE AQUI!
+          backgroundColor: '#1B431D'
         }}
       >
-        {/* Camada verde com transparência para o mosaico aparecer no fundo */}
         <div className="absolute inset-0 bg-[#1B431D]/90 backdrop-blur-sm"></div>
-
         <div className="relative space-y-8 max-w-sm sm:max-w-md mx-auto animate-in fade-in zoom-in-95 duration-1000">
-
-          {/* ÍCONE DE PIZZA COM ANIMAÇÃO */}
           <div className="flex justify-center">
             <div className="relative group">
-              {/* Brilho suave atrás da pizza */}
               <div className="absolute inset-0 bg-white/10 rounded-full blur-3xl"></div>
               <Pizza
                 size={80}
@@ -177,7 +180,6 @@ const App: React.FC = () => {
               />
             </div>
           </div>
-
           <div className="space-y-2">
             <h1 className="text-white text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none drop-shadow-2xl">
               PIZZARIA BARCELLOS
@@ -186,18 +188,14 @@ const App: React.FC = () => {
               Produzindo Qualidade
             </p>
           </div>
-
-          {/* BARRA DE CARREGAMENTO BRANCA/VERMELHA */}
           <div className="w-48 sm:w-60 h-1 bg-white/10 mx-auto rounded-full overflow-hidden border border-white/5">
             <div className="h-full bg-red-600 animate-pulse w-full"></div>
           </div>
-
           <div className="h-12 flex items-center justify-center">
             <p className="text-white font-bold text-[11px] sm:text-sm uppercase tracking-widest animate-pulse max-w-xs leading-tight">
               {splashText}
             </p>
           </div>
-
           <p className="text-white/20 text-[8px] font-black tracking-[0.5em] uppercase pt-8 border-t border-white/5">
             Linhares - Espírito Santo
           </p>
@@ -206,12 +204,9 @@ const App: React.FC = () => {
     );
   }
 
-  // PARTE 2: COLE O BLOCO DO CARTAZ EXATAMENTE AQUI
   if (showAd && settings.showAdCartaz) {
     return (
       <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 overflow-hidden bg-black">
-
-        {/* Fundo Forçado com CSS Inline - Pizzaria Barcellos */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
@@ -222,21 +217,14 @@ const App: React.FC = () => {
             zIndex: 0
           }}
         />
-
-        {/* Camada de Contraste */}
         <div className="absolute inset-0 bg-black/50 z-[1]" />
-
         <div className="relative z-[10] w-full max-w-[92%] sm:max-w-md mx-auto animate-in fade-in zoom-in duration-500 flex flex-col items-center">
-
-          {/* TÍTULO DE AVISOS */}
           <div className="text-center mb-4">
             <h2 className="text-white text-xl font-black uppercase tracking-[0.3em] drop-shadow-lg">
               Avisos
             </h2>
             <div className="w-10 h-1 bg-red-600 mx-auto mt-1 rounded-full"></div>
           </div>
-
-          {/* Container do Cartaz */}
           <div className="w-full rounded-[1.5rem] border-2 border-white/10 shadow-2xl bg-zinc-900/60 overflow-visible flex justify-center">
             <img
               src={settings.adCartazLink}
@@ -244,8 +232,6 @@ const App: React.FC = () => {
               className="w-full h-auto max-h-[68vh] object-contain shadow-2xl touch-pinch-zoom cursor-zoom-in active:scale-125 transition-transform duration-300"
             />
           </div>
-
-          {/* Botão de Ação Inferior */}
           <button
             onClick={() => setShowAd(false)}
             className="w-full mt-8 mb-2 bg-red-600 hover:bg-red-700 text-white font-black py-5 rounded-2xl uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 text-base"
@@ -257,7 +243,6 @@ const App: React.FC = () => {
     );
   }
 
-  // O SEU CÓDIGO DO ADMIN CONTINUA LOGO ABAIXO:
   if (isAdmin && !isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black p-4 text-white">
@@ -282,18 +267,15 @@ const App: React.FC = () => {
 
   return (
     <div
-      // TROQUEI AS CLASSES AQUI:
       className="min-h-screen flex flex-col text-white selection:bg-red-600 selection:text-white bg-repeat bg-center"
-      // AJUSTEI O STYLE AQUI (Repetição e Tamanho):
       style={{
         backgroundImage: `url('https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/fundosite.webp')`,
-        backgroundRepeat: 'repeat',   // Faz a imagem repetir (mosaico)
-        backgroundSize: '250px'        // TAMANHO DO DESENHO: Ajuste aqui (ex: 100px ou 200px) até ficar sutil igual ao Zap
+        backgroundRepeat: 'repeat',
+        backgroundSize: '250px'
       }}
     >
       <header className="sticky top-0 z-50 bg-[#1B431D] border-b border-black/20 shadow-2xl">
         <div className="container mx-auto px-4 py-3">
-          {/* LINHA SUPERIOR: LOGO E CARRINHO */}
           <div className="flex justify-between items-center mb-3">
             <div className="flex items-center gap-4 cursor-pointer select-none" onClick={handleLogoClick}>
               {settings.logoImage ? (
@@ -315,8 +297,9 @@ const App: React.FC = () => {
               )}
               <button
                 onClick={() => setIsCartOpen(true)}
-                disabled={!settings.isOpen && !isOrderingAsAdmin}
-                className={`relative p-3 bg-white/10 rounded-full hover:bg-white/20 transition border border-white/10 ${(!settings.isOpen && !isOrderingAsAdmin) && 'opacity-30'}`}
+                // Usando a variável canOrder aqui
+                disabled={!canOrder}
+                className={`relative p-3 bg-white/10 rounded-full hover:bg-white/20 transition border border-white/10 ${(!canOrder) && 'opacity-30'}`}
               >
                 <ShoppingCart size={22} className="text-white" />
                 {cart.length > 0 && (
@@ -328,20 +311,18 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          {/* LINHA INFERIOR: STATUS DA LOJA E WHATSAPP CLICÁVEL */}
           <div className="flex justify-start">
             <div className="inline-flex items-center gap-3 bg-black/30 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/5">
-              {/* Indicador Visual de Status */}
               <div className="flex items-center gap-2">
-                <div className={`w-2.5 h-2.5 rounded-full animate-pulse ${settings.isOpen ? 'bg-green-500 shadow-[0_0_8px_#22c55e]' : 'bg-red-500 shadow-[0_0_8px_#ef4444]'}`}></div>
+                {/* Ajustado para refletir o status de agendamento */}
+                <div className={`w-2.5 h-2.5 rounded-full animate-pulse ${settings.isOpen || scheduledTime ? 'bg-green-500 shadow-[0_0_8px_#22c55e]' : 'bg-red-500 shadow-[0_0_8px_#ef4444]'}`}></div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-white">
-                  {settings.isOpen ? 'Loja Aberta' : 'Loja Fechada'}
+                  {settings.isOpen ? 'Loja Aberta' : scheduledTime ? `AGENDADO: ${scheduledTime}H` : 'Loja Fechada'}
                 </span>
               </div>
 
               <span className="text-white/20 text-xs">|</span>
 
-              {/* Link direto para o seu WhatsApp */}
               <a
                 href={`https://wa.me/${CONTACT_WHATSAPP}`}
                 target="_blank"
@@ -357,15 +338,47 @@ const App: React.FC = () => {
       </header>
 
       <main className="flex-grow container mx-auto px-4 py-8 max-w-4xl">
-        {!settings.isOpen && !isOrderingAsAdmin && (
-          <div className="bg-red-900/40 border border-red-600 p-8 rounded-[2rem] mb-10 text-center animate-pulse">
-            <h2 className="text-2xl font-black text-red-100 uppercase tracking-tighter">{settings.closeMessage}</h2>
-            <p className="text-[10px] text-red-200 uppercase font-black mt-3 tracking-widest opacity-60">Produzindo Qualidade</p>
+
+        {/* CASO A LOJA ESTEJA FECHADA E O CLIENTE NÃO TENHA FEITO UM AGENDAMENTO AINDA */}
+        {!canOrder && (
+          <>
+            <div className="flex justify-start mb-3 -mt-5">
+              <button
+                onClick={() => setIsSchedulingModalOpen(true)}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white text-xs sm:text-sm font-black py-2.5 px-6 rounded-xl uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all active:scale-95"
+              >
+                AGENDAR PEDIDO
+              </button>
+            </div>
+
+            <div className="bg-red-900/40 border border-red-600 p-4 sm:p-5 rounded-2xl mb-6 text-center animate-pulse shadow-lg">
+              <h2 className="text-[1.1rem] sm:text-xl font-black text-red-100 uppercase tracking-tighter leading-tight">
+                {settings.closeMessage}
+              </h2>
+              <p className="text-[9px] text-red-200 uppercase font-black mt-1.5 tracking-widest opacity-80">Produzindo Qualidade</p>
+            </div>
+          </>
+        )}
+
+        {/* MENSAGEM DE AVISO QUANDO O AGENDAMENTO ESTIVER ATIVO (Para ele lembrar) */}
+        {scheduledTime && (
+          <div className="bg-yellow-900/40 border border-yellow-500 p-3 sm:p-4 rounded-2xl mb-6 text-center shadow-[0_0_15px_rgba(234,179,8,0.15)] flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in duration-500">
+            <div className="flex items-center gap-3">
+              <Clock className="text-yellow-500" size={24} />
+              <div className="text-left">
+                <h2 className="text-sm sm:text-base font-black text-yellow-100 uppercase tracking-tighter leading-tight">
+                  Seu pedido está sendo agendado para as {scheduledTime}h
+                </h2>
+                <p className="text-[10px] text-yellow-200/70 font-bold uppercase tracking-widest">Adicione os itens ao carrinho</p>
+              </div>
+            </div>
+            <button onClick={() => setScheduledTime(null)} className="w-full sm:w-auto bg-black/40 hover:bg-black/60 text-zinc-300 text-[10px] px-4 py-2 rounded-xl uppercase font-black tracking-widest transition-colors">
+              Cancelar
+            </button>
           </div>
         )}
 
         <div className="relative rounded-[3rem] overflow-hidden mb-14 shadow-2xl border border-zinc-800 h-64 sm:h-80 group">
-          {/* SUBSTITUÍMOS A IMG POR ESTE VÍDEO: */}
           <video
             src={settings.bannerImage}
             autoPlay
@@ -374,7 +387,6 @@ const App: React.FC = () => {
             playsInline
             className="w-full h-full object-cover brightness-[0.5] group-hover:scale-105 transition duration-1000"
           />
-
           <div className="absolute inset-0 flex flex-col justify-center p-12 bg-gradient-to-r from-black/80 to-transparent">
             <span className="bg-red-600 text-[10px] font-black px-4 py-1.5 rounded-full mb-4 w-fit uppercase tracking-widest shadow-lg">Premium Quality</span>
             <h2 className="text-4xl sm:text-6xl font-black mb-3 uppercase tracking-tighter leading-none">{settings.bannerText}</h2>
@@ -383,13 +395,13 @@ const App: React.FC = () => {
         </div>
 
         <MenuList
-          // Agora busca no nome e na descrição (ingredientes)
           products={products.filter(p =>
             p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             p.description.toLowerCase().includes(searchQuery.toLowerCase())
           )}
           onAddToCart={(i) => setCart([...cart, i])}
-          isOpen={settings.isOpen || isOrderingAsAdmin}
+          // Agora passamos o canOrder, assim se ele agendou, o cardápio fica liberado
+          isOpen={canOrder}
           promotions={settings.promotions}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -399,8 +411,6 @@ const App: React.FC = () => {
       <footer className="bg-zinc-900/80 border-t border-zinc-800 pt-16 pb-8 backdrop-blur-xl">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 text-center md:text-left">
-
-            {/* COLUNA 1: MARCA */}
             <div className="space-y-4">
               <div className="flex items-center justify-center md:justify-start gap-3">
                 {settings.logoImage && <img src={settings.logoImage} alt="Logo" className="h-10 w-auto object-contain" />}
@@ -411,7 +421,6 @@ const App: React.FC = () => {
               </p>
             </div>
 
-            {/* COLUNA 2: CONTATO E LOCAL */}
             <div className="space-y-4">
               <h5 className="text-red-600 font-black text-[10px] uppercase tracking-[0.3em]">Onde Estamos</h5>
               <div className="flex flex-col gap-3 text-zinc-300 text-sm font-bold uppercase tracking-widest">
@@ -423,7 +432,6 @@ const App: React.FC = () => {
                   <MessageCircle size={18} className="text-green-500" />
                   <span>(27) 99618-3495</span>
                 </div>
-                {/* ADICIONEI O HORÁRIO AQUI EMBAIXO: */}
                 <div className="flex items-center justify-center md:justify-start gap-3">
                   <Pizza size={18} className="text-yellow-500" />
                   <span>Aberto: 18:00h às 23:30h</span>
@@ -431,7 +439,6 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* COLUNA 3: REDES SOCIAIS */}
             <div className="space-y-4">
               <h5 className="text-red-600 font-black text-[10px] uppercase tracking-[0.3em]">Siga-nos</h5>
               <div className="flex justify-center md:justify-start gap-4">
@@ -444,8 +451,6 @@ const App: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* LINHA FINAL: COPYRIGHTS */}
           <div className="pt-8 border-t border-zinc-800/50 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">
               © 2026 PIZZARIA BARCELLOS - MARCA REGISTRADA
@@ -456,6 +461,83 @@ const App: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* MODAL DE AGENDAMENTO CUSTOMIZADO */}
+      {isSchedulingModalOpen && (
+        <div className="fixed inset-0 z-[500] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+          <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-[2rem] w-full max-w-sm shadow-2xl relative animate-in zoom-in-95 duration-200">
+            <div className="flex flex-col items-center mb-6">
+              <Clock size={40} className="text-yellow-500 mb-3 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]" />
+              <h2 className="text-xl font-black text-white uppercase tracking-wider text-center">Horário de Entrega</h2>
+              <p className="text-zinc-400 text-[10px] text-center mt-1 font-bold uppercase tracking-widest">
+                Selecione o horário desejado
+              </p>
+            </div>
+
+            {/* NOSSO SELETOR DE TEMPO CUSTOMIZADO */}
+            <div className="flex gap-4 mb-8">
+              {/* Coluna Horas */}
+              <div className="flex-1">
+                <p className="text-zinc-500 text-[9px] font-black uppercase tracking-widest text-center mb-2">Hora</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {availableHours.map(h => (
+                    <button
+                      key={h}
+                      onClick={() => {
+                        setScheduleHour(h);
+                        // Ajusta os minutos automaticamente se cair em uma restrição
+                        if (h === '18' && (scheduleMinute === '00' || scheduleMinute === '10')) setScheduleMinute('20');
+                        if (h === '23' && (scheduleMinute === '40' || scheduleMinute === '50')) setScheduleMinute('30');
+                      }}
+                      className={`py-2 rounded-xl font-black text-sm sm:text-base transition-colors ${scheduleHour === h ? 'bg-yellow-500 text-black shadow-lg' : 'bg-black text-white border border-zinc-700 hover:border-yellow-500'}`}
+                    >
+                      {h}h
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Coluna Minutos */}
+              <div className="flex-1">
+                <p className="text-zinc-500 text-[9px] font-black uppercase tracking-widest text-center mb-2">Minuto</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {availableMinutes.map(m => {
+                    // Lógica de bloqueio: antes das 18:20h e depois das 23:30h
+                    const isDisabled = (scheduleHour === '18' && (m === '00' || m === '10')) || (scheduleHour === '23' && (m === '40' || m === '50'));
+
+                    return (
+                      <button
+                        key={m}
+                        disabled={isDisabled}
+                        onClick={() => setScheduleMinute(m)}
+                        className={`py-2 rounded-xl font-black text-sm sm:text-base transition-colors ${isDisabled ? 'opacity-20 cursor-not-allowed bg-black text-zinc-600 border border-zinc-900' : scheduleMinute === m ? 'bg-yellow-500 text-black shadow-lg' : 'bg-black text-white border border-zinc-700 hover:border-yellow-500'}`}
+                      >
+                        {m}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* BOTÕES EMPILHADOS PARA NÃO QUEBRAR TEXTO */}
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={handleConfirmSchedule}
+                className="w-full py-4 bg-yellow-500 text-black rounded-2xl font-black uppercase tracking-wider hover:bg-yellow-600 transition-colors shadow-[0_0_15px_rgba(234,179,8,0.4)] active:scale-95 text-sm sm:text-base"
+              >
+                Ir para o Cardápio
+              </button>
+              <button
+                onClick={() => setIsSchedulingModalOpen(false)}
+                className="w-full py-3 bg-zinc-800 text-zinc-300 rounded-2xl font-black uppercase tracking-wider hover:bg-zinc-700 transition-colors text-xs sm:text-sm"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} items={cart} onRemove={(idx) => setCart(cart.filter((_, i) => i !== idx))} settings={settings} onSubmit={submitOrder} />
     </div>
