@@ -543,7 +543,7 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
 
 export const INITIAL_SETTINGS: AppSettings = {
   // --- CONFIGURAÇÃO DO CARTAZ  ---
-  showAdCartaz: true, // Mude para false para esconder o cartaz quando a promoção acabar
+  showAdCartaz: false, // ADICIONA OU TIRA O CARTAZ
   adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazz.avif', // Link da imagem hospedada na Oracle Cloud
   // ----------------------------------------------
   isOpen: MANUAL_CONTROL === 'open' ? true :
@@ -551,7 +551,7 @@ export const INITIAL_SETTINGS: AppSettings = {
       checkAutomaticOpening(),
 
   closedMode: 'hide-menu',
-  closeMessage: 'NESTE MOMENTO ESTAMOS FECHADOS, ATENDEMOS DAS 18:00H ÀS 23:30H',
+  closeMessage: 'NESTE MOMENTO ESTAMOS FECHADOS MAS PODE AGENDAR O SEU PEDIDO.',
   neighborhoods: INITIAL_NEIGHBORHOODS,
   blockedNeighborhoods: 'Bagueira, Rio Quartel, Bebedouro, Residencial Rio Doce, Bairro Perigoso, Invasão',
   defaultDeliveryFee: 4,
