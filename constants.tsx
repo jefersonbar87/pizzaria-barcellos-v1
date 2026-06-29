@@ -398,7 +398,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola.png',
     available: true,
-    stock: 10,
+    stock: 0,
   },
   {
     id: 'ab41mss9y',
@@ -429,7 +429,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola-lata.avif',
     available: true,
-    stock: 10,
+    stock: 0,
   },
   {
     id: '7oglY4b53',
@@ -450,7 +450,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola-600ml.png',
     available: true,
-    stock: 10,
+    stock: 0,
   },
   {
     id: 'pilarlssq',
