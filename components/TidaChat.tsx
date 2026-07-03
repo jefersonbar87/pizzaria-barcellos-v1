@@ -16,19 +16,19 @@ const TIDA_FAQ: TidaFAQItem[] = [
   { keywords: ['horario', 'funcionamento'], answer: 'Funcionamos todos os dias, das 18h às 23h30!' },
   { keywords: ['tempo', 'demora', 'espera'], answer: 'Leva de 20 a 40 minutos para ficar prontinha!' },
   { keywords: ['endereco', 'endereço', 'local'], answer: 'Rua São Bernardo, 20, Nova Esperança, Linhares/ES.' },
-  
+
   // 🌟 NOVO 1: Instagram da Pizzaria
-  { 
-    keywords: ['instagram', 'insta', 'rede social', 'fotos'], 
-    answer: 'Acompanhe a gente no Instagram! É o @pizzaria.barcellos 🍕✨\n\nLá postamos fotos deliciosas das nossas pizzas. Clique no link para seguir:\nhttps://www.instagram.com/pizzaria.barcellos' 
+  {
+    keywords: ['instagram', 'insta', 'rede social', 'fotos'],
+    answer: 'Acompanhe a gente no Instagram! É o @pizzaria.barcellos 🍕✨\n\nLá postamos fotos deliciosas das nossas pizzas. Clique no link para seguir:\nhttps://www.instagram.com/pizzaria.barcellos'
   },
-  
+
   // 🌟 NOVO 2: A Essência e História da Família Barcellos
-  { 
-    keywords: ['fale da pizzaria', 'como surgiu', 'historia', 'história', 'sobre voces', 'sobre vocês', 'quem sao'], 
-    answer: 'A história da Pizzaria Barcellos é feita de muita fé, união familiar e amor pelo que fazemos! 🥰\n\nTudo começou há cerca de 16 anos. Por muito tempo, atendemos com dedicação em um ponto físico, mas alguns desafios nos fizeram pausar. Foi um período de muito aprendizado e perseverança.\n\nMas Deus escreve novas histórias! 🙏 No dia 07/03/2026, reinauguramos no formato delivery. Nosso objetivo não é só vender pizza, mas levar até a sua casa sabor, carinho e um pedacinho da nossa história.\n\nSeja muito bem-vindo! O que podemos preparar para você hoje?' 
+  {
+    keywords: ['fale da pizzaria', 'como surgiu', 'historia', 'história', 'sobre voces', 'sobre vocês', 'quem sao'],
+    answer: 'A história da Pizzaria Barcellos é feita de muita fé, união familiar e amor pelo que fazemos! 🥰\n\nTudo começou há cerca de 16 anos. Por muito tempo, atendemos com dedicação em um ponto físico, mas alguns desafios nos fizeram pausar. Foi um período de muito aprendizado e perseverança.\n\nMas Deus escreve novas histórias! 🙏 No dia 07/03/2026, reinauguramos no formato delivery. Nosso objetivo não é só vender pizza, mas levar até a sua casa sabor, carinho e um pedacinho da nossa história.\n\nSeja muito bem-vindo! O que podemos preparar para você hoje?'
   },
-  
+
   // 🌟 NOVO 3: Aviso de Atendimento Exclusivo (Sem mesas)
   {
     keywords: ['comer ai', 'comer aí', 'mesas', 'espaço fisico', 'espaço físico', 'consumir no local', 'rodizio', 'rodízio', 'reservar mesa'],
@@ -40,17 +40,17 @@ const TidaChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [isIconVisible, setIsIconVisible] = useState(true); // NOVO: Controla a visibilidade da Mini-Tida
-  const [isInputDisabled, setIsInputDisabled] = useState(false); 
-  const [inputValue, setInputValue] = useState(''); 
-  
+  const [isInputDisabled, setIsInputDisabled] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, sender: 'tida', text: 'Olá! Sou a Tida, assistente virtual da Pizzaria Barcellos. Como posso te ajudar hoje?' }
   ]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { 
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
   // =========================================================================
@@ -66,7 +66,7 @@ const TidaChat = () => {
     const agora = new Date();
     const hora = agora.getHours();
     const minuto = agora.getMinutes();
-    
+
     // Converte tudo para minutos para facilitar o cálculo exato
     const tempoAtualEmMinutos = (hora * 60) + minuto;
     const horarioAbertura = (17 * 60) + 50; // 17:50h
@@ -107,13 +107,13 @@ const TidaChat = () => {
       activeOptions = ['Coroa 2L', 'Coroa 1,5L'];
     } else if (lastText.includes('tamanho do seu guaraná antarctica')) {
       // NOVO: Botão de tamanho
-      activeOptions = ['Guaraná Antarctica 2L']; 
+      activeOptions = ['Guaraná Antarctica 2L'];
     } else if (lastText.includes('sabor do seu coroa 2l')) {
       // AJUSTE CIRÚRGICO: Botões de sabor para o Coroa 2L
       activeOptions = ['Guaraná', 'Laranja', 'Limão', 'Uva'];
     } else if (lastText.includes('entrega ou retirada')) {
       activeOptions = ['🛵 Entrega', '🏪 Retirada'];
-    } else if (lastText.includes('posso enviar o pedido')) { 
+    } else if (lastText.includes('posso enviar o pedido')) {
       activeOptions = ['✅ Confirmar pedido', '🔄 Revisar pedido', '❌ Cancelar pedido'];
     } else if (lastText.includes('forma de pagamento')) {
       activeOptions = ['PIX', 'Dinheiro', 'Débito', 'Crédito'];
@@ -294,21 +294,35 @@ const TidaChat = () => {
 
       const data = await response.json();
       let responseTextFinal = 'Me desculpe, tive um problema de conexão. Pode repetir?';
-      
+
       if (data.candidates && data.candidates[0].content.parts[0].text) {
         responseTextFinal = data.candidates[0].content.parts[0].text;
-        
-        let msgParaOChat = responseTextFinal; // O que vai aparecer na tela da Tida
-        
+
         if (responseTextFinal.includes('Pedido enviado Via TidaChat')) {
-           // O "Oba!" entra apenas no chat, mantendo o responseTextFinal limpo para o WhatsApp
-           msgParaOChat = "Oba! Pedido confirmado! 🎉\n\n" + responseTextFinal;
-           
-           const whatsappUrl = `https://wa.me/5527996183495?text=${encodeURIComponent(responseTextFinal)}`;
-           setTimeout(() => window.open(whatsappUrl, '_blank'), 2500);
+          // 1. Mensagem amigável de despedida (aparece na tela da Tida)
+          const msgSucesso = "Oba! Pedido confirmado! 🎉\n\nEstou abrindo o seu WhatsApp para enviarmos direto para a nossa cozinha! 🛵💨";
+          setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: msgSucesso }]);
+
+          // 2. Truque ninja para burlar o bloqueador de pop-ups
+          const whatsappUrl = `https://api.whatsapp.com/send?phone=5527996183495&text=${encodeURIComponent(responseTextFinal)}`;
+          const link = document.createElement('a');
+          link.href = whatsappUrl;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          // 3. Limpa o pedido e volta para o início após 2 segundos
+          setTimeout(() => {
+            setMessages([{ id: Date.now(), sender: 'tida', text: 'Olá! Sou a Tida, assistente virtual da Pizzaria Barcellos. Como posso te ajudar hoje?' }]);
+          }, 2000);
+
+          setIsTyping(false);
+          return; // Interrompe aqui para não duplicar mensagens no chat
         }
-        
-        setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: msgParaOChat }]);
+
+        // Se NÃO for a finalização do pedido, segue o fluxo normal
+        setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: responseTextFinal }]);
       } else {
         setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: responseTextFinal }]);
       }
@@ -329,25 +343,25 @@ const TidaChat = () => {
     if (!verificarExpediente()) {
       setMessages(prev => [...prev, { id: Date.now(), sender: 'client', text: userText }]);
       setIsTyping(true);
-      
+
       setTimeout(() => {
-        setMessages(prev => [...prev, { 
-          id: Date.now(), 
-          sender: 'tida', 
-          text: 'A pizzaria está fechada, não consigo fazer pedidos, mas você pode agendar seu pedido clicando no botão de Agendar pedido no topo do site. 🌙🍕' 
+        setMessages(prev => [...prev, {
+          id: Date.now(),
+          sender: 'tida',
+          text: 'A pizzaria está fechada, não consigo fazer pedidos, mas você pode agendar seu pedido clicando no botão de Agendar pedido no topo do site. 🌙🍕'
         }]);
         setIsTyping(false);
       }, 500);
-      
+
       setInputValue('');
-      return; 
+      return;
     }
 
     const newClientMsg: Message = { id: Date.now(), sender: 'client', text: userText };
     const updatedHistory = [...messages, newClientMsg];
-    
+
     setMessages(updatedHistory);
-    setInputValue(''); 
+    setInputValue('');
 
     // 2. FAQ Rápido
     const textLower = userText.toLowerCase().trim();
@@ -363,35 +377,35 @@ const TidaChat = () => {
 
     // 3. INTERCEPTADORES LOCAIS (Velocidade Extrema)
     if (userText === '🍕 Fazer novo pedido') {
-        setTimeout(() => setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: 'Oba! O que vamos pedir hoje?' }]), 500);
-        return;
+      setTimeout(() => setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: 'Oba! O que vamos pedir hoje?' }]), 500);
+      return;
     }
-    
+
     if (userText === '📖 Conhecer os Sabores') {
-        const cardapioText = `Aqui estão os nossos deliciosos sabores! 🍕\n\n*PIZZAS CLÁSSICAS:*\n- Muçarela\n- Mista\n- Frango\n- Calabresa\n- 4 Sabores\n- Frango C/ Catupiry\n- Calabresa C/ Cebola\n- Palmito\n- Vegetariana\n- Siciliana\n- Kanal X\n- À Moda da Casa\n- Magiordano\n- Portuguesa\n\n*PIZZAS PREMIUM:*\n- Camarão\n- Camarão Cremoso\n- Italiana\n- Saborosa\n- Pepperoni\n- Bacon Chef\n- Completa Barcellos\n- Carioca\n- 3 Queijos\n- 4 Queijos\n- Lombo Canadense\n- Juparanã\n- Pizza de Batata-Frita\n\nE aí, já deu água na boca? Oba! O que vamos pedir hoje?`;
-        
-        setTimeout(() => setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: cardapioText }]), 500);
-        return;
+      const cardapioText = `Aqui estão os nossos deliciosos sabores! 🍕\n\n*PIZZAS CLÁSSICAS:*\n- Muçarela\n- Mista\n- Frango\n- Calabresa\n- 4 Sabores\n- Frango C/ Catupiry\n- Calabresa C/ Cebola\n- Palmito\n- Vegetariana\n- Siciliana\n- Kanal X\n- À Moda da Casa\n- Magiordano\n- Portuguesa\n\n*PIZZAS PREMIUM:*\n- Camarão\n- Camarão Cremoso\n- Italiana\n- Saborosa\n- Pepperoni\n- Bacon Chef\n- Completa Barcellos\n- Carioca\n- 3 Queijos\n- 4 Queijos\n- Lombo Canadense\n- Juparanã\n- Pizza de Batata-Frita\n\nE aí, já deu água na boca? Oba! O que vamos pedir hoje?`;
+
+      setTimeout(() => setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: cardapioText }]), 500);
+      return;
     }
-    
+
     if (userText === '❓ Tirar dúvidas') {
-        setTimeout(() => setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: 'Claro! Pode me perguntar sobre nosso horário, entrega, valores ou endereço.' }]), 500);
-        return;
+      setTimeout(() => setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: 'Claro! Pode me perguntar sobre nosso horário, entrega, valores ou endereço.' }]), 500);
+      return;
     }
     if (userText === '🍕 Pizza um sabor') {
-        setTimeout(() => setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: 'Ótima escolha! Qual sabor de pizza você vai querer?' }]), 500);
-        return;
+      setTimeout(() => setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: 'Ótima escolha! Qual sabor de pizza você vai querer?' }]), 500);
+      return;
     }
     if (userText === '🍕 Pizza meio a meio') {
-        setTimeout(() => setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: 'Combinado! Para dividir os sabores, precisamos definir o tamanho. Qual o tamanho da pizza?' }]), 500);
-        return;
+      setTimeout(() => setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: 'Combinado! Para dividir os sabores, precisamos definir o tamanho. Qual o tamanho da pizza?' }]), 500);
+      return;
     }
 
     // 4. ViaCEP (CEP interceptor)
     let textForGemini = userText;
     const cepMatch = userText.match(/\b\d{2}\.?\d{3}-?\d{3}\b/);
     if (cepMatch) {
-      setIsTyping(true); 
+      setIsTyping(true);
       const cepLimpo = cepMatch[0].replace(/\D/g, '');
       try {
         const cepResponse = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
@@ -399,7 +413,7 @@ const TidaChat = () => {
         if (!cepData.erro) {
           textForGemini = `[O sistema encontrou o CEP ${cepLimpo}. Logradouro: ${cepData.logradouro}, Bairro: ${cepData.bairro}]. OBRIGATÓRIO: Escreva o logradouro exato (${cepData.logradouro}) e o Bairro na sua resposta para o cliente confirmar, informe a taxa de entrega e, em seguida, peça o número da casa e complemento.`;
         }
-      } catch (err) {}
+      } catch (err) { }
     }
 
     // 5. Passa para o Gemini as escolhas complexas (para ele calcular subtotal)
@@ -419,8 +433,8 @@ const TidaChat = () => {
   if (!isIconVisible) {
     return (
       <div style={{ position: 'fixed', bottom: '10px', right: '10px', zIndex: 1000 }}>
-        <button 
-          onClick={() => { setIsIconVisible(true); setIsOpen(true); }} 
+        <button
+          onClick={() => { setIsIconVisible(true); setIsOpen(true); }}
           title="Chamar Tida"
           style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 0 }}
         >
@@ -451,7 +465,7 @@ const TidaChat = () => {
 
       {isOpen && (
         <div style={{ width: '360px', height: '560px', background: '#FFF8F2', borderRadius: '20px', boxShadow: '0 12px 30px rgba(0,0,0,0.25)', display: 'flex', flexDirection: 'column', overflow: 'hidden', marginBottom: '15px', fontFamily: 'system-ui, -apple-system, sans-serif', border: '1px solid #EADCC9' }}>
-          
+
           <div style={{ padding: '14px 16px', background: '#FFF8F2', borderBottom: '1px solid #EADCC9', display: 'flex', alignItems: 'center', position: 'relative' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: '#14532d', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -464,10 +478,10 @@ const TidaChat = () => {
             </div>
             <div style={{ position: 'absolute', right: '16px', top: '22px', display: 'flex', gap: '16px', alignItems: 'center' }}>
               <button onClick={() => setMessages([{ id: 1, sender: 'tida', text: 'Olá! Sou a Tida, assistente virtual da Pizzaria Barcellos. Como posso te ajudar hoje?' }])} title="Reiniciar" style={{ background: 'none', border: 'none', color: '#1B431D', fontSize: '16px', cursor: 'pointer' }}>🔄</button>
-              
+
               {/* Botão de Minimizar (Volta a ser a bolha normal com a frase) */}
               <button onClick={() => setIsOpen(false)} title="Minimizar" style={{ background: 'none', border: 'none', color: '#1B431D', fontSize: '18px', cursor: 'pointer', fontWeight: 'bold', marginTop: '-8px' }}>_</button>
-              
+
               {/* Botão de Ocultar (Vira a Mini-Tida no cantinho) */}
               <button onClick={() => setIsIconVisible(false)} title="Ocultar Tida" style={{ background: 'none', border: 'none', color: '#EF4444', fontSize: '18px', cursor: 'pointer', fontWeight: 'bold' }}>✕</button>
             </div>
@@ -490,27 +504,27 @@ const TidaChat = () => {
             {!isTyping && activeOptions.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px', marginTop: '4px' }}>
                 {activeOptions.map(opt => (
-                   <button key={opt} onClick={() => handleOptionClick(opt)} className="tida-quick-btn">{opt}</button>
+                  <button key={opt} onClick={() => handleOptionClick(opt)} className="tida-quick-btn">{opt}</button>
                 ))}
               </div>
             )}
-            
+
             <div ref={messagesEndRef} />
           </div>
 
           {/* INPUT FORM (Ajustado Cirurgicamente para Bloquear o Teclado) */}
           <form onSubmit={handleSendMessage} style={{ padding: '14px 16px', background: 'white', borderTop: '1px solid #EADCC9', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <input 
-              type="text" 
-              placeholder={activeOptions.length > 0 ? "Escolha uma das opções acima..." : "Digite sua mensagem..."} 
-              disabled={isInputDisabled || activeOptions.length > 0} 
-              value={inputValue} 
-              onChange={(e) => setInputValue(e.target.value)} 
-              style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontSize: '14px', color: activeOptions.length > 0 ? '#999' : '#111' }} 
+            <input
+              type="text"
+              placeholder={activeOptions.length > 0 ? "Escolha uma das opções acima..." : "Digite sua mensagem..."}
+              disabled={isInputDisabled || activeOptions.length > 0}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontSize: '14px', color: activeOptions.length > 0 ? '#999' : '#111' }}
             />
-            <button 
-              type="submit" 
-              disabled={isInputDisabled || activeOptions.length > 0 || !inputValue.trim() || isTyping} 
+            <button
+              type="submit"
+              disabled={isInputDisabled || activeOptions.length > 0 || !inputValue.trim() || isTyping}
               style={{ background: 'none', border: 'none', color: (!inputValue.trim() || isTyping || activeOptions.length > 0) ? '#A3B8A4' : '#1B431D', cursor: 'pointer' }}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z" /></svg>
