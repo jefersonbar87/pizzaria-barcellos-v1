@@ -4,6 +4,7 @@ import { INITIAL_PRODUCTS, INITIAL_SETTINGS, CONTACT_WHATSAPP, INSTAGRAM_URL } f
 import AdminDashboard from './components/AdminDashboard';
 import MenuList from './components/MenuList';
 import CartModal from './components/CartModal';
+import TidaChat from './components/TidaChat';
 // Importei o ícone Clock para deixarmos a nossa modal de agendamento bem profissional
 import { ShoppingCart, Instagram, MapPin, Search, CheckCircle2, MessageCircle, ArrowLeft, Mail, Lock, Pizza, Clock } from 'lucide-react';
 
@@ -539,7 +540,16 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} items={cart} onRemove={(idx) => setCart(cart.filter((_, i) => i !== idx))} settings={settings} onSubmit={submitOrder} />
+      <CartModal 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+        items={cart} 
+        onRemove={(idx) => setCart(cart.filter((_, i) => i !== idx))} 
+        settings={settings} 
+        onSubmit={submitOrder} 
+      />
+
+      <TidaChat />
     </div>
   );
 };

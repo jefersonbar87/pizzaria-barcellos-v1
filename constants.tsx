@@ -420,7 +420,6 @@ export const INITIAL_PRODUCTS: Product[] = [
     available: true,
     stock: 10,
   },
-
   {
     id: '6oglq4b39',
     name: 'REFRIGERANTE COCA COLA LATA 350ML',
@@ -453,12 +452,12 @@ export const INITIAL_PRODUCTS: Product[] = [
     stock: 10,
   },
   {
-    id: 'pilarlssq',
-    name: 'REFRIGERANTE COROA LARANJA 2L',
+    id: 'gelarknsq',
+    name: 'REFRIGERANTE GUARANÁ ANTARCTICA 2L',
     description: 'Refrigerante 2 Litros gelado',
-    priceFixed: 10,
+    priceFixed: 15,
     category: 'Bebida',
-    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coroa-laranja.avif',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/guaranaantactida.avif',
     available: true,
     stock: 10,
   },
@@ -479,6 +478,16 @@ export const INITIAL_PRODUCTS: Product[] = [
     priceFixed: 10,
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/Coroa-Guarana.png',
+    available: true,
+    stock: 10,
+  },
+  {
+    id: 'pilarlssq',
+    name: 'REFRIGERANTE COROA LARANJA 2L',
+    description: 'Refrigerante 2 Litros gelado',
+    priceFixed: 10,
+    category: 'Bebida',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coroa-laranja.avif',
     available: true,
     stock: 10,
   },
@@ -543,8 +552,8 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
 
 export const INITIAL_SETTINGS: AppSettings = {
   // --- CONFIGURAÇÃO DO CARTAZ  ---
-  showAdCartaz: false, // ADICIONA OU TIRA O CARTAZ
-  adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazz.avif', // Link da imagem hospedada na Oracle Cloud
+  showAdCartaz: true, // ADICIONA OU TIRA O CARTAZ
+  adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaztidachat.avif', // Link da imagem hospedada na Oracle Cloud
   // ----------------------------------------------
   isOpen: MANUAL_CONTROL === 'open' ? true :
     MANUAL_CONTROL === 'closed' ? false :
@@ -581,6 +590,16 @@ export const INITIAL_SETTINGS: AppSettings = {
       isClickable: true, // AQUI VC ATIVA O VALOR
       title: 'PROMOÇÃO FAMÍLIA G',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/promocao-coroa.avif', // Link da imagem que criamos
+      price: 129.90,
+      freeDelivery: false, // SELO DE ENTREGA GRATIS
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+    },
+    {
+      id: 'infor-0', // Entre aspas para ser uma string
+      active: true, // AQUI VC ATIVA E DESATIVA
+      isClickable: false, // AQUI VC ATIVA O VALOR
+      title: 'Informativo TidaChat',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/informativotidachat.avif', // Link da imagem que criamos
       price: 129.90,
       freeDelivery: false, // SELO DE ENTREGA GRATIS
       description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
