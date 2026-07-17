@@ -24,7 +24,8 @@ export interface Product {
 export interface CartItem {
   id: string;
   product1: Product;
-  product2?: Product; // For half-and-half
+  product2?: Product; // Para meio a meio
+  product3?: Product; // Adicione esta linha para o 3º sabor
   size?: PizzaSize;
   quantity: number;
   totalPrice: number;

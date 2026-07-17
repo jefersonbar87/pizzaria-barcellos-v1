@@ -33,15 +33,24 @@ const TIDA_FAQ: TidaFAQItem[] = [
   {
     keywords: ['comer ai', 'comer aí', 'mesas', 'espaço fisico', 'espaço físico', 'consumir no local', 'rodizio', 'rodízio', 'reservar mesa'],
     answer: 'Nós trabalhamos exclusivamente com Delivery e Retirada no balcão! 🛵🏃‍♂️\n\nNão temos espaço físico com mesas para consumo no local, mas preparamos sua pizza com todo o carinho para você saborear no conforto da sua casa. O que vamos pedir hoje? 🍕'
+  },
+  
+  // 🌟 NOVO 4: Maionese Caseira
+  {
+    keywords: ['maionese', 'caseira', 'molho', 'maionese verde', 'molho verde'],
+    answer: 'Siiim! 😋 Toda pizza vai acompanhada da nossa deliciosa maionese caseira temperada. É sucesso absoluto por aqui!'
   }
 ];
 
 const TidaChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [isIconVisible, setIsIconVisible] = useState(true); // NOVO: Controla a visibilidade da Mini-Tida
+  const [isIconVisible, setIsIconVisible] = useState(true); 
   const [isInputDisabled, setIsInputDisabled] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  
+  // 🌟 Controla se a Tida está em modo de descanso (15s inativa)
+  const [isIdle, setIsIdle] = useState(false);
 
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, sender: 'tida', text: 'Olá! Sou a Tida, assistente virtual da Pizzaria Barcellos. Como posso te ajudar hoje?' }
@@ -52,6 +61,24 @@ const TidaChat = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
+
+  // 🌟 AJUSTE CIRÚRGICO: O temporizador agora reinicia sempre que ela acorda
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    
+    // Só ativa o timer se o chat estiver fechado, ícone visível e ELA NÃO ESTIVER DORMINDO
+    if (!isOpen && isIconVisible) {
+      if (!isIdle) {
+        timeout = setTimeout(() => {
+          setIsIdle(true); // Dorme após 15s sem interação
+        }, 15000);
+      }
+    } else {
+      setIsIdle(false); // Acorda se o chat abrir
+    }
+
+    return () => clearTimeout(timeout);
+  }, [isOpen, isIconVisible, isIdle]); // Adicionado o isIdle para reiniciar o ciclo
 
   // =========================================================================
   // 🛑 PAINEL DE CONTROLE DE EXPEDIENTE 🛑
@@ -67,7 +94,6 @@ const TidaChat = () => {
     const hora = agora.getHours();
     const minuto = agora.getMinutes();
 
-    // Converte tudo para minutos para facilitar o cálculo exato
     const tempoAtualEmMinutos = (hora * 60) + minuto;
     const horarioAbertura = (17 * 60) + 50; // 17:50h
     const horarioFechamento = (23 * 60) + 30; // 23:30h
@@ -82,7 +108,6 @@ const TidaChat = () => {
   let activeOptions: string[] = [];
   const lastText = getLastMessageText();
 
-  // Se a última mensagem for da Tida, verifica os gatilhos para mostrar botões
   if (messages.length > 0 && messages[messages.length - 1].sender === 'tida') {
     if (lastText.includes('como posso te ajudar')) {
       activeOptions = ['🍕 Fazer novo pedido', '📖 Conhecer os Sabores', '❓ Tirar dúvidas'];
@@ -97,7 +122,6 @@ const TidaChat = () => {
     } else if (lastText.includes('tamanho da pizza')) {
       activeOptions = ['Média', 'Grande', 'Gigante', 'Família'];
     } else if (lastText.includes('escolha uma das opções abaixo')) {
-      // Adicionado o botão do Antarctica Guaraná
       activeOptions = ['🥤 Coca Cola', '🥤 Refrigerante Coroa', '🥤 Guaraná Antarctica', '❌ Não quero refrigerante'];
     } else if (lastText.includes('versão normal ou zero')) {
       activeOptions = ['Normal', 'Zero'];
@@ -106,10 +130,8 @@ const TidaChat = () => {
     } else if (lastText.includes('tamanho do seu refrigerante coroa')) {
       activeOptions = ['Coroa 2L', 'Coroa 1,5L'];
     } else if (lastText.includes('tamanho do seu guaraná antarctica')) {
-      // NOVO: Botão de tamanho
       activeOptions = ['Guaraná Antarctica 2L'];
     } else if (lastText.includes('sabor do seu coroa 2l')) {
-      // AJUSTE CIRÚRGICO: Botões de sabor para o Coroa 2L
       activeOptions = ['Guaraná', 'Laranja', 'Limão', 'Uva'];
     } else if (lastText.includes('entrega ou retirada')) {
       activeOptions = ['🛵 Entrega', '🏪 Retirada'];
@@ -299,11 +321,9 @@ const TidaChat = () => {
         responseTextFinal = data.candidates[0].content.parts[0].text;
 
         if (responseTextFinal.includes('Pedido enviado Via TidaChat')) {
-          // 1. Mensagem amigável de despedida (aparece na tela da Tida)
           const msgSucesso = "Oba! Pedido confirmado! 🎉\n\nEstou abrindo o seu WhatsApp para enviarmos direto para a nossa cozinha! 🛵💨";
           setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: msgSucesso }]);
 
-          // 2. Truque ninja para burlar o bloqueador de pop-ups
           const whatsappUrl = `https://api.whatsapp.com/send?phone=5527996183495&text=${encodeURIComponent(responseTextFinal)}`;
           const link = document.createElement('a');
           link.href = whatsappUrl;
@@ -312,16 +332,14 @@ const TidaChat = () => {
           link.click();
           document.body.removeChild(link);
 
-          // 3. Limpa o pedido e volta para o início após 2 segundos
           setTimeout(() => {
             setMessages([{ id: Date.now(), sender: 'tida', text: 'Olá! Sou a Tida, assistente virtual da Pizzaria Barcellos. Como posso te ajudar hoje?' }]);
           }, 2000);
 
           setIsTyping(false);
-          return; // Interrompe aqui para não duplicar mensagens no chat
+          return; 
         }
 
-        // Se NÃO for a finalização do pedido, segue o fluxo normal
         setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: responseTextFinal }]);
       } else {
         setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: responseTextFinal }]);
@@ -339,7 +357,6 @@ const TidaChat = () => {
   const processMessage = async (userText: string) => {
     if (!userText.trim() || isTyping) return;
 
-    // 1. TRAVA DE EXPEDIENTE (A PRIMEIRA COISA A SER CHECADA)
     if (!verificarExpediente()) {
       setMessages(prev => [...prev, { id: Date.now(), sender: 'client', text: userText }]);
       setIsTyping(true);
@@ -363,7 +380,6 @@ const TidaChat = () => {
     setMessages(updatedHistory);
     setInputValue('');
 
-    // 2. FAQ Rápido
     const textLower = userText.toLowerCase().trim();
     const faqMatch = TIDA_FAQ.find(item => item.keywords.some(keyword => textLower.includes(keyword)));
     if (faqMatch) {
@@ -375,7 +391,6 @@ const TidaChat = () => {
       return;
     }
 
-    // 3. INTERCEPTADORES LOCAIS (Velocidade Extrema)
     if (userText === '🍕 Fazer novo pedido') {
       setTimeout(() => setMessages(prev => [...prev, { id: Date.now(), sender: 'tida', text: 'Oba! O que vamos pedir hoje?' }]), 500);
       return;
@@ -401,7 +416,6 @@ const TidaChat = () => {
       return;
     }
 
-    // 4. ViaCEP (CEP interceptor)
     let textForGemini = userText;
     const cepMatch = userText.match(/\b\d{2}\.?\d{3}-?\d{3}\b/);
     if (cepMatch) {
@@ -416,7 +430,6 @@ const TidaChat = () => {
       } catch (err) { }
     }
 
-    // 5. Passa para o Gemini as escolhas complexas (para ele calcular subtotal)
     tidaResponseLogic(textForGemini, updatedHistory);
   };
 
@@ -429,7 +442,6 @@ const TidaChat = () => {
     processMessage(option);
   };
 
-  // A MÁGICA: Se ocultada, vira uma bolinha discreta no cantinho
   if (!isIconVisible) {
     return (
       <div style={{ position: 'fixed', bottom: '10px', right: '10px', zIndex: 1000 }}>
@@ -447,6 +459,7 @@ const TidaChat = () => {
       </div>
     );
   }
+
   return (
     <div className="tida-chat-container" style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000, display: 'flex', alignItems: 'flex-end', flexDirection: 'column' }}>
       <style>{`
@@ -478,11 +491,7 @@ const TidaChat = () => {
             </div>
             <div style={{ position: 'absolute', right: '16px', top: '22px', display: 'flex', gap: '16px', alignItems: 'center' }}>
               <button onClick={() => setMessages([{ id: 1, sender: 'tida', text: 'Olá! Sou a Tida, assistente virtual da Pizzaria Barcellos. Como posso te ajudar hoje?' }])} title="Reiniciar" style={{ background: 'none', border: 'none', color: '#1B431D', fontSize: '16px', cursor: 'pointer' }}>🔄</button>
-
-              {/* Botão de Minimizar (Volta a ser a bolha normal com a frase) */}
               <button onClick={() => setIsOpen(false)} title="Minimizar" style={{ background: 'none', border: 'none', color: '#1B431D', fontSize: '18px', cursor: 'pointer', fontWeight: 'bold', marginTop: '-8px' }}>_</button>
-
-              {/* Botão de Ocultar (Vira a Mini-Tida no cantinho) */}
               <button onClick={() => setIsIconVisible(false)} title="Ocultar Tida" style={{ background: 'none', border: 'none', color: '#EF4444', fontSize: '18px', cursor: 'pointer', fontWeight: 'bold' }}>✕</button>
             </div>
           </div>
@@ -500,7 +509,6 @@ const TidaChat = () => {
               </div>
             )}
 
-            {/* RENDERIZADOR DINÂMICO DE BOTÕES */}
             {!isTyping && activeOptions.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px', marginTop: '4px' }}>
                 {activeOptions.map(opt => (
@@ -508,11 +516,9 @@ const TidaChat = () => {
                 ))}
               </div>
             )}
-
             <div ref={messagesEndRef} />
           </div>
 
-          {/* INPUT FORM (Ajustado Cirurgicamente para Bloquear o Teclado) */}
           <form onSubmit={handleSendMessage} style={{ padding: '14px 16px', background: 'white', borderTop: '1px solid #EADCC9', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <input
               type="text"
@@ -534,17 +540,44 @@ const TidaChat = () => {
         </div>
       )}
 
+      {/* BOTÃO FLUTUANTE (ANIMAÇÃO 15S, MENOR, SEM FANTASMA E SEM BLOQUEAR A TELA) */}
       {!isOpen && (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{ background: 'white', color: '#1B431D', padding: '10px 16px', borderRadius: '16px', marginRight: '14px', boxShadow: '0 4px 20px rgba(0,0,0,0.4)', position: 'relative', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          
+          {/* Balãozinho de texto com Position Absolute para NUNCA bugar o clique */}
+          <div style={{ 
+            position: 'absolute',
+            right: '85px', // Fica à esquerda da bolinha da Tida, sem ocupar espaço real
+            background: 'white', color: '#1B431D', padding: '10px 16px', borderRadius: '16px',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.4)', display: 'flex', flexDirection: 'column',
+            transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+            opacity: isIdle ? 0 : 1,
+            visibility: isIdle ? 'hidden' : 'visible',
+            transform: isIdle ? 'translateX(10px) scale(0.95)' : 'translateX(0) scale(1)',
+            pointerEvents: 'none', // Garante que o texto é intocável, o clique passa direto
+            whiteSpace: 'nowrap' // Impede que o texto quebre de linha
+          }}>
             <span style={{ fontWeight: '800', fontSize: '15px', color: '#1B431D' }}>Posso te ajudar?</span>
             <span style={{ fontSize: '11px', color: '#666', fontWeight: '600' }}>Tida - Assistente Virtual</span>
+            {/* Triângulo do balão */}
             <div style={{ position: 'absolute', right: '-6px', top: '50%', transform: 'translateY(-50%)', width: '0', height: '0', borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderLeft: '6px solid white' }}></div>
           </div>
-          <button onClick={() => setIsOpen(true)} style={{ border: 'none', background: 'transparent', cursor: 'pointer' }}>
-            <div className="tida-pulse-active" style={{ width: '84px', height: '84px', borderRadius: '50%', border: '2px solid #22c55e', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ width: '76px', height: '76px', borderRadius: '50%', background: 'radial-gradient(circle, #14532d 0%, #064e3b 100%)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/avataTida.png" alt="Tida" style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scale(1.90) translateY(15px)' }} />
+          
+          {/* Botão da Tida (Sensor e Clique) */}
+          <button 
+            onMouseEnter={() => setIsIdle(false)} 
+            onClick={() => setIsOpen(true)} 
+            style={{ 
+              border: 'none', background: 'transparent', cursor: 'pointer',
+              transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+              opacity: isIdle ? 0.4 : 1,
+              transform: isIdle ? 'scale(0.75)' : 'scale(1)',
+              transformOrigin: 'center'
+            }}
+          >
+            <div className="tida-pulse-active" style={{ width: '74px', height: '74px', borderRadius: '50%', border: '2px solid #22c55e', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '66px', height: '66px', borderRadius: '50%', background: 'radial-gradient(circle, #14532d 0%, #064e3b 100%)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <img src="https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/avataTida.png" alt="Tida" style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scale(1.90) translateY(13px)' }} />
               </div>
             </div>
           </button>

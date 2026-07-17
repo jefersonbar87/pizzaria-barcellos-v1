@@ -33,17 +33,18 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   const [formData, setFormData] = useState({
     customerName: '',
     phone: '',
-    neighborhood: { name: 'Entrega', fee: settings.defaultDeliveryFee },
+    neighborhood: { name: 'Pendente', fee: -1 }, // -1 indica que ainda não foi calculado
     paymentMethod: 'PIX',
     changeFor: '',
     orderType: 'Entrega',
-    observation: '' // <-- ADICIONE ESTA LINHA AQUI! 
+    observation: '' 
   });
 
   const subtotal = items.reduce((acc, i) => acc + i.totalPrice, 0);
 
-  const deliveryFee = formData.orderType === 'Retirada' ? 0 : formData.neighborhood.fee;
-  const total = subtotal + deliveryFee;
+  // Substitua a linha da deliveryFee por esta:
+  const deliveryFee = formData.orderType === 'No Balcão' ? 0 : (formData.neighborhood.fee === -1 ? -1 : formData.neighborhood.fee);
+  const total = subtotal + (formData.neighborhood.fee === -1 ? 0 : deliveryFee);
 
   // FUNÇÃO DE MÁSCARA PARA TELEFONE
   const formatPhone = (value: string) => {
@@ -195,7 +196,8 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   const handleNext = () => {
     if (step === 1 && items.length === 0) return;
     if (step === 2) {
-      const isAddressOk = formData.orderType === 'Retirada' || (addressData.cep && addressData.number);
+      // Dentro da função handleNext, ajuste a lógica de validação do endereço:
+const isAddressOk = formData.orderType === 'No Balcão' || (addressData.cep && addressData.number);
 
       if (!formData.customerName || !formData.phone || !isAddressOk) {
         alert('Preencha os campos obrigatórios para prosseguir.');
@@ -409,16 +411,31 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
-                  onClick={() => { setFormData({ ...formData, orderType: 'Entrega' }); setIsBlocked(addressData.bairro ? isBlocked : false); }}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${formData.orderType === 'Entrega' ? 'border-red-600 bg-red-600/10 text-white' : 'border-zinc-800 text-zinc-500 opacity-50'}`}
+                  onClick={() => { 
+                    setFormData({ ...formData, orderType: 'Entrega' }); 
+                    setIsBlocked(addressData.bairro ? isBlocked : false); 
+                  }}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${
+                    formData.orderType === 'Entrega' 
+                      ? 'border-red-600 bg-red-600/10 text-white' 
+                      : 'border-zinc-800 text-zinc-500 opacity-50'
+                  }`}
                 >
                   <Truck size={24} />
                   <span className="text-xs font-black uppercase tracking-widest">Entrega</span>
                 </button>
+
                 <button
                   type="button"
-                  onClick={() => { setFormData({ ...formData, orderType: 'Retirada' }); setIsBlocked(false); }}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${formData.orderType === 'Retirada' ? 'border-red-600 bg-red-600/10 text-white' : 'border-zinc-800 text-zinc-500 opacity-50'}`}
+                  onClick={() => { 
+                    setFormData({ ...formData, orderType: 'No Balcão' }); 
+                    setIsBlocked(false); 
+                  }}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${
+                    formData.orderType === 'No Balcão' 
+                      ? 'border-red-600 bg-red-600/10 text-white' 
+                      : 'border-zinc-800 text-zinc-500 opacity-50'
+                  }`}
                 >
                   <ShoppingBag size={24} />
                   <span className="text-xs font-black uppercase tracking-widest">No Balcão</span>
@@ -549,12 +566,24 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
               <span>Subtotal</span>
               <span>R$ {subtotal.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between text-zinc-400 text-sm font-bold uppercase">
-              <span>Taxa de Entrega</span>
-              <span className={deliveryFee === 0 ? 'text-green-500 font-black' : ''}>
-                {deliveryFee === 0 ? 'GRÁTIS' : `R$ ${deliveryFee.toFixed(2)}`}
-              </span>
-            </div>
+            
+<div className="flex justify-between text-zinc-400 text-sm font-bold uppercase">
+  <span>Taxa de Entrega</span>
+  <span className={
+    (formData.orderType === 'No Balcão' || deliveryFee === 0) 
+    ? 'text-green-500 font-black' 
+    : ''
+  }>
+    {formData.orderType === 'No Balcão' 
+      ? 'GRÁTIS' 
+      : formData.neighborhood.fee === -1 
+        ? 'A CALCULAR' 
+        : deliveryFee === 0 
+          ? 'GRÁTIS' 
+          : `R$ ${deliveryFee.toFixed(2)}`
+    }
+  </span>
+</div>
             <div className="flex justify-between text-white font-black text-xl pt-2">
               <span>TOTAL</span>
               <span className="text-red-600 tracking-tighter">R$ {total.toFixed(2)}</span>

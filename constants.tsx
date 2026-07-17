@@ -547,12 +547,13 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
   { name: 'AVISO', fee: 5 },
   { name: 'CANIVETE', fee: 5 },
   { name: 'VILA MARIA', fee: 5 },
+  { name: 'NOVA BETÂNIA', fee: 5 },
   { name: 'VILA ISABEL', fee: 5 },
 ];
 
 export const INITIAL_SETTINGS: AppSettings = {
   // --- CONFIGURAÇÃO DO CARTAZ  ---
-  showAdCartaz: true, // ADICIONA OU TIRA O CARTAZ
+  showAdCartaz: false, // ADICIONA OU TIRA O CARTAZ
   adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaztidachat.avif', // Link da imagem hospedada na Oracle Cloud
   // ----------------------------------------------
   isOpen: MANUAL_CONTROL === 'open' ? true :
