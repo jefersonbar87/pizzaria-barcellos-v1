@@ -37,7 +37,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
     paymentMethod: 'PIX',
     changeFor: '',
     orderType: 'Entrega',
-    observation: '' 
+    observation: ''
   });
 
   const subtotal = items.reduce((acc, i) => acc + i.totalPrice, 0);
@@ -189,7 +189,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
     setFormData({ ...formData, customerName: val.toUpperCase() });
   };
 
-  const fullAddress = formData.orderType === 'Retirada'
+  const fullAddress = formData.orderType === 'No Balcão'
     ? 'RETIRADA NO BALCÃO'
     : `${addressData.street}, ${addressData.number}${addressData.complement ? ` - ${addressData.complement}` : ''}, ${addressData.bairro}, ${addressData.city} (CEP: ${addressData.cep})`;
 
@@ -197,7 +197,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
     if (step === 1 && items.length === 0) return;
     if (step === 2) {
       // Dentro da função handleNext, ajuste a lógica de validação do endereço:
-const isAddressOk = formData.orderType === 'No Balcão' || (addressData.cep && addressData.number);
+      const isAddressOk = formData.orderType === 'No Balcão' || (addressData.cep && addressData.number);
 
       if (!formData.customerName || !formData.phone || !isAddressOk) {
         alert('Preencha os campos obrigatórios para prosseguir.');
@@ -226,13 +226,14 @@ const isAddressOk = formData.orderType === 'No Balcão' || (addressData.cep && a
       }, 4000);
       // -------------------------------------------------------
 
-      // 2. Envia os dados para o App.tsx
+      // 2. Envia os dados para o App.tsx traduzindo para o WhatsApp
       await onSubmit({
         ...formData,
+        neighborhood: formData.orderType === 'No Balcão' ? { name: 'Balcão', fee: 0 } : formData.neighborhood,
         address: fullAddress,
         items: items,
         total: total,
-        orderType: formData.orderType as "Entrega" | "Retirada",
+        orderType: formData.orderType === 'No Balcão' ? 'Retirada' : 'Entrega',
         observation: formData.observation
       });
 
@@ -411,15 +412,14 @@ const isAddressOk = formData.orderType === 'No Balcão' || (addressData.cep && a
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
-                  onClick={() => { 
-                    setFormData({ ...formData, orderType: 'Entrega' }); 
-                    setIsBlocked(addressData.bairro ? isBlocked : false); 
+                  onClick={() => {
+                    setFormData({ ...formData, orderType: 'Entrega' });
+                    setIsBlocked(addressData.bairro ? isBlocked : false);
                   }}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${
-                    formData.orderType === 'Entrega' 
-                      ? 'border-red-600 bg-red-600/10 text-white' 
+                  className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${formData.orderType === 'Entrega'
+                      ? 'border-red-600 bg-red-600/10 text-white'
                       : 'border-zinc-800 text-zinc-500 opacity-50'
-                  }`}
+                    }`}
                 >
                   <Truck size={24} />
                   <span className="text-xs font-black uppercase tracking-widest">Entrega</span>
@@ -427,15 +427,14 @@ const isAddressOk = formData.orderType === 'No Balcão' || (addressData.cep && a
 
                 <button
                   type="button"
-                  onClick={() => { 
-                    setFormData({ ...formData, orderType: 'No Balcão' }); 
-                    setIsBlocked(false); 
+                  onClick={() => {
+                    setFormData({ ...formData, orderType: 'No Balcão' });
+                    setIsBlocked(false);
                   }}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${
-                    formData.orderType === 'No Balcão' 
-                      ? 'border-red-600 bg-red-600/10 text-white' 
+                  className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${formData.orderType === 'No Balcão'
+                      ? 'border-red-600 bg-red-600/10 text-white'
                       : 'border-zinc-800 text-zinc-500 opacity-50'
-                  }`}
+                    }`}
                 >
                   <ShoppingBag size={24} />
                   <span className="text-xs font-black uppercase tracking-widest">No Balcão</span>
@@ -566,24 +565,24 @@ const isAddressOk = formData.orderType === 'No Balcão' || (addressData.cep && a
               <span>Subtotal</span>
               <span>R$ {subtotal.toFixed(2)}</span>
             </div>
-            
-<div className="flex justify-between text-zinc-400 text-sm font-bold uppercase">
-  <span>Taxa de Entrega</span>
-  <span className={
-    (formData.orderType === 'No Balcão' || deliveryFee === 0) 
-    ? 'text-green-500 font-black' 
-    : ''
-  }>
-    {formData.orderType === 'No Balcão' 
-      ? 'GRÁTIS' 
-      : formData.neighborhood.fee === -1 
-        ? 'A CALCULAR' 
-        : deliveryFee === 0 
-          ? 'GRÁTIS' 
-          : `R$ ${deliveryFee.toFixed(2)}`
-    }
-  </span>
-</div>
+
+            <div className="flex justify-between text-zinc-400 text-sm font-bold uppercase">
+              <span>Taxa de Entrega</span>
+              <span className={
+                (formData.orderType === 'No Balcão' || deliveryFee === 0)
+                  ? 'text-green-500 font-black'
+                  : ''
+              }>
+                {formData.orderType === 'No Balcão'
+                  ? 'GRÁTIS'
+                  : formData.neighborhood.fee === -1
+                    ? 'A CALCULAR'
+                    : deliveryFee === 0
+                      ? 'GRÁTIS'
+                      : `R$ ${deliveryFee.toFixed(2)}`
+                }
+              </span>
+            </div>
             <div className="flex justify-between text-white font-black text-xl pt-2">
               <span>TOTAL</span>
               <span className="text-red-600 tracking-tighter">R$ {total.toFixed(2)}</span>
