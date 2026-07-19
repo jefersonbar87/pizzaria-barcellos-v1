@@ -548,6 +548,7 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
   { name: 'CANIVETE', fee: 5 },
   { name: 'VILA MARIA', fee: 5 },
   { name: 'NOVA BETÂNIA', fee: 5 },
+  { name: 'VILA IZABEL', fee: 5 },
   { name: 'VILA ISABEL', fee: 5 },
 ];
 
@@ -563,7 +564,7 @@ export const INITIAL_SETTINGS: AppSettings = {
   closedMode: 'hide-menu',
   closeMessage: 'NESTE MOMENTO ESTAMOS FECHADOS MAS PODE AGENDAR O SEU PEDIDO.',
   neighborhoods: INITIAL_NEIGHBORHOODS,
-  blockedNeighborhoods: 'Bagueira, Rio Quartel, Bebedouro, Residencial Rio Doce, Bairro Perigoso, Invasão',
+  blockedNeighborhoods: 'Bagueira, Rio Quartel, Guaxe, Povoação, Bebedouro, Residencial Rio Doce, Bairro Perigoso, Invasão, Pontal do Ipiranga, Regência',
   defaultDeliveryFee: 4,
   allowedCity: 'LINHARES',
   bannerText: 'SABOR EM CADA DETALHE',
