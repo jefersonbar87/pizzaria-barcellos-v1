@@ -373,12 +373,19 @@ const MenuList: React.FC<MenuListProps> = ({ products, onAddToCart, isOpen, prom
                     alt={product.name}
                     className={`w-full h-full object-cover group-hover:scale-110 transition duration-500 ${(!product.available || product.stock === 0) ? 'opacity-30 grayscale' : ''}`}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
 
-                  {(!product.available || product.stock === 0) && (
+                  {(!product.available || product.stock === 0) ? (
                     <div className="absolute inset-0 flex items-center justify-center p-2">
                       <div className="bg-red-600/90 text-white text-[10px] font-black uppercase py-1.5 px-3 rounded-md shadow-2xl border border-white/20 tracking-tighter">
                         Esgotado
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center justify-center w-full px-1 pointer-events-none">
+                      {/* Adicionamos animate-pulse e group-hover:animate-none aqui na linha abaixo */}
+                      <div className="animate-pulse group-hover:animate-none bg-black/60 backdrop-blur-md border border-white/20 text-white text-[8px] sm:text-[9px] font-black uppercase py-1 px-2.5 rounded-full flex items-center gap-1 shadow-xl transition-all duration-300 group-hover:bg-red-600 group-hover:border-red-500 group-hover:shadow-red-600/50">
+                        <Plus size={10} strokeWidth={4} /> SELECIONAR
                       </div>
                     </div>
                   )}

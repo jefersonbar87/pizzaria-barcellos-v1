@@ -149,7 +149,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
           }
 
           if (blockedList.some(b => b === bairroUpper && b !== "")) {
-            setDeliveryMessage("Desculpe, não realizamos entregas neste bairro por questões de logística ou segurança.");
+            setDeliveryMessage("Ops, não entregamos nessa localidade mas se quiser pode retirar na pizzaria.");
             setIsBlocked(true);
             setLoadingCep(false);
             return;
@@ -417,8 +417,8 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                     setIsBlocked(addressData.bairro ? isBlocked : false);
                   }}
                   className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${formData.orderType === 'Entrega'
-                      ? 'border-red-600 bg-red-600/10 text-white'
-                      : 'border-zinc-800 text-zinc-500 opacity-50'
+                    ? 'border-red-600 bg-red-600/10 text-white'
+                    : 'border-zinc-800 text-zinc-500 opacity-50'
                     }`}
                 >
                   <Truck size={24} />
@@ -432,8 +432,8 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                     setIsBlocked(false);
                   }}
                   className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${formData.orderType === 'No Balcão'
-                      ? 'border-red-600 bg-red-600/10 text-white'
-                      : 'border-zinc-800 text-zinc-500 opacity-50'
+                    ? 'border-red-600 bg-red-600/10 text-white'
+                    : 'border-zinc-800 text-zinc-500 opacity-50'
                     }`}
                 >
                   <ShoppingBag size={24} />
