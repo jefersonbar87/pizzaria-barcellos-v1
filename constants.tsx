@@ -418,7 +418,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cocazero.jpg',
     available: true,
-    stock: 0,
+    stock: 10,
   },
   {
     id: '6oglq4b39',
