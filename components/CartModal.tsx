@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CartItem, Neighborhood, Order, AppSettings } from '../types';
-import { Trash2, ArrowLeft, ArrowRight, ChevronRight, CreditCard, Banknote, Landmark, Smartphone, Loader2, MapPin, AlertCircle, ShoppingBag, Truck, Check } from 'lucide-react';
+// AJUSTE: Adicionado o ícone 'Ticket' no final da lista de importações
+import { Trash2, ArrowLeft, ArrowRight, ChevronRight, CreditCard, Banknote, Landmark, Smartphone, Loader2, MapPin, AlertCircle, ShoppingBag, Truck, Check, Ticket } from 'lucide-react';
 
 interface CartModalProps {
   isOpen: boolean;
@@ -16,8 +17,8 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   const [loadingCep, setLoadingCep] = useState(false);
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false); // <-- ESTADO NOVO
-  const [showManualButton, setShowManualButton] = useState(false); // Estado para o botão de segurança
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showManualButton, setShowManualButton] = useState(false);
   const [deliveryMessage, setDeliveryMessage] = useState<string | null>(null);
   const [isBlocked, setIsBlocked] = useState(false);
 
@@ -33,7 +34,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   const [formData, setFormData] = useState({
     customerName: '',
     phone: '',
-    neighborhood: { name: 'Pendente', fee: -1 }, // -1 indica que ainda não foi calculado
+    neighborhood: { name: 'Pendente', fee: -1 },
     paymentMethod: 'PIX',
     changeFor: '',
     orderType: 'Entrega',
@@ -42,11 +43,9 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
 
   const subtotal = items.reduce((acc, i) => acc + i.totalPrice, 0);
 
-  // Substitua a linha da deliveryFee por esta:
   const deliveryFee = formData.orderType === 'No Balcão' ? 0 : (formData.neighborhood.fee === -1 ? -1 : formData.neighborhood.fee);
   const total = subtotal + (formData.neighborhood.fee === -1 ? 0 : deliveryFee);
 
-  // FUNÇÃO DE MÁSCARA PARA TELEFONE
   const formatPhone = (value: string) => {
     if (!value) return "";
     const numbers = value.replace(/\D/g, "");
@@ -61,6 +60,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
     const formatted = formatPhone(e.target.value);
     setFormData({ ...formData, phone: formatted });
   };
+
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
       alert("Seu navegador não suporta localização.");
@@ -69,28 +69,24 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
 
     setLoadingLocation(true);
 
-    // Configurações para forçar a precisão máxima do aparelho
     const geoOptions = {
-      enableHighAccuracy: true, // O SEGREDO: Força o GPS de satélite do celular
-      timeout: 10000,           // Espera até 10 segundos pela melhor resposta
-      maximumAge: 0             // Não aceita localização "velha" do cache
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
     };
 
     navigator.geolocation.getCurrentPosition(async (position) => {
       try {
         const { latitude, longitude } = position.coords;
 
-        // Usando o serviço gratuito do OpenStreetMap
         const response = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
         );
         const data = await response.json();
 
         if (data.address) {
-          // Tenta pegar o CEP (postcode)
           const cepEncontrado = data.address.postcode ? data.address.postcode.replace(/\D/g, '') : '';
 
-          // Se achou o CEP, já preenche a rua e o bairro para o cliente não ter dúvida
           if (cepEncontrado) {
             setAddressData(prev => ({
               ...prev,
@@ -99,7 +95,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
               city: data.address.city || data.address.town || prev.city
             }));
 
-            // Chama sua lógica de CEP para validar as taxas da Barcellos
             handleCepLookup(cepEncontrado);
           } else {
             alert("CEP não identificado nesta posição. Por favor, digite manualmente.");
@@ -111,12 +106,12 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
         setLoadingLocation(false);
       }
     }, (error) => {
-      // Mensagens de erro amigáveis para o cliente
       if (error.code === 1) alert("Por favor, autorize a localização no seu navegador.");
       else alert("Não conseguimos captar seu sinal de GPS. Digite o CEP.");
       setLoadingLocation(false);
-    }, geoOptions); // <--- Passando as opções de alta precisão aqui
+    }, geoOptions);
   };
+
   const handleCepLookup = async (cep: string) => {
     const cleanedCep = cep.replace(/\D/g, '');
     setAddressData(prev => ({ ...prev, cep: cleanedCep }));
@@ -155,11 +150,9 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
             return;
           }
 
-          // --- BUSCA O BAIRRO NAS CONFIGURAÇÕES ---
           const match = settings.neighborhoods.find(n => n.name.toUpperCase() === bairroUpper);
 
           if (match) {
-            // VERIFICA SE O BAIRRO ESTÁ DESATIVADO NO PAINEL
             if ((match as any).active === false) {
               setDeliveryMessage("Ainda não estamos entregando no seu bairro, você pode retirar no balcão. Agradeço a compreensão.");
               setIsBlocked(true);
@@ -196,7 +189,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   const handleNext = () => {
     if (step === 1 && items.length === 0) return;
     if (step === 2) {
-      // Dentro da função handleNext, ajuste a lógica de validação do endereço:
       const isAddressOk = formData.orderType === 'No Balcão' || (addressData.cep && addressData.number);
 
       if (!formData.customerName || !formData.phone || !isAddressOk) {
@@ -217,16 +209,12 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
-      // 1. Ativa a tela de sucesso NO MODAL
       setShowSuccess(true);
 
-      // --- AJUSTE CIRÚRGICO: Inicia o cronômetro de segurança ---
       setTimeout(() => {
         setShowManualButton(true);
       }, 4000);
-      // -------------------------------------------------------
 
-      // 2. Envia os dados para o App.tsx traduzindo para o WhatsApp
       await onSubmit({
         ...formData,
         neighborhood: formData.orderType === 'No Balcão' ? { name: 'Balcão', fee: 0 } : formData.neighborhood,
@@ -241,13 +229,12 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
       console.error("Erro ao finalizar:", error);
       setShowSuccess(false);
       setIsSubmitting(false);
-      setShowManualButton(false); // Reseta o botão se der erro
+      setShowManualButton(false);
     }
   };
 
   if (!isOpen) return null;
 
-  // --- TELA DE SUCESSO ESTRATÉGICA ---
   if (showSuccess) {
     return (
       <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-md p-6">
@@ -262,7 +249,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
             Estamos te encaminhando para o <span className="text-green-500 font-bold">WhatsApp</span> da Pizzaria Barcellos agora. 🍕🚀
           </p>
 
-          {/* AJUSTE CIRÚRGICO: Alterna entre "Redirecionando" e o "Botão Manual" */}
           {!showManualButton ? (
             <div className="flex items-center justify-center gap-2 text-red-500 font-bold text-[10px] uppercase tracking-widest">
               <Loader2 className="animate-spin" size={16} />
@@ -289,7 +275,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
       <div className="w-full max-w-lg bg-zinc-900 h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-300 border-l border-zinc-800">
         <header className="p-6 border-b border-zinc-800 flex justify-between items-center bg-black">
           <div className="flex items-center gap-4">
-            {/* BOTÃO DE VOLTAR: Seta para a esquerda para retornar à loja */}
             <button
               onClick={onClose}
               className="p-2 bg-zinc-900 border border-zinc-800 rounded-xl hover:bg-red-600 hover:border-red-600 text-zinc-400 hover:text-white transition-all duration-300"
@@ -315,17 +300,13 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                   <>
                     {items.map((item, idx) => (
                       <div key={idx} className="flex gap-4 bg-black border border-zinc-800 p-4 rounded-3xl group animate-in fade-in slide-in-from-right-4">
-
-                        {/* CONTAINER DA IMAGEM ADAPTADO PARA ATÉ 3 SABORES VISUAIS */}
                         <div className="relative w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0 bg-zinc-950">
-                          {/* Sabor 1 */}
                           <img
                             src={item.product1.image}
                             className="absolute inset-0 w-full h-full object-cover"
                             alt={item.product1.name}
                           />
 
-                          {/* MODO 3 SABORES VISUAL NO CARRINHO */}
                           {item.product3 ? (
                             <>
                               <img
@@ -342,7 +323,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                               />
                             </>
                           ) : item.product2 ? (
-                            /* MODO MEIO A MEIO TRADICIONAL */
                             <img
                               src={item.product2.image}
                               className="absolute inset-0 w-full h-full object-cover"
@@ -351,7 +331,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                             />
                           ) : null}
 
-                          {/* Linhas divisórias inteligentes para as miniaturas */}
                           {item.product3 ? (
                             <div className="absolute inset-0 z-10 pointer-events-none opacity-40">
                               <div className="absolute top-0 left-1/2 bottom-1/2 w-[1px] bg-white" />
@@ -363,7 +342,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                           ) : null}
                         </div>
 
-                        {/* TEXTO DO TÍTULO TOTALMENTE ATUALIZADO EM FRAÇÕES */}
                         <div className="flex-grow">
                           <h4 className="font-bold text-sm uppercase leading-tight text-white">
                             {item.product3
@@ -389,7 +367,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                         </button>
                       </div>
                     ))}
-                    {/* --- CAMPO DE OBSERVAÇÃO ESTRATÉGICO --- */}
                     <div className="mt-8 border-t border-zinc-800 pt-6 animate-in fade-in zoom-in-95">
                       <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-3 block ml-2">
                         Alguma observação no pedido?
@@ -479,7 +456,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                         {loadingCep && <Loader2 className="absolute right-4 top-4 animate-spin text-red-600" />}
                       </div>
 
-                      {/* PASSO 2: PARA QUEM NÃO SABE O CEP - ADICIONADO AQUI */}
                       <div className="mt-4 flex flex-col items-center">
                         <div className="flex items-center gap-3 w-full mb-3 px-2">
                           <div className="h-px flex-grow bg-zinc-800"></div>
@@ -532,22 +508,57 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
           {step === 3 && (
             <div className="space-y-4">
               <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Escolha o Meio de Pagamento</label>
+              
+              {/* AJUSTE: Adicionado a opção Vale-Refeição no mapeamento */}
               {[
                 { id: 'PIX', icon: <Landmark size={20} />, label: 'PIX (Instantâneo)' },
                 { id: 'Dinheiro', icon: <Banknote size={20} />, label: 'Dinheiro' },
                 { id: 'Crédito', icon: <CreditCard size={20} />, label: 'Cartão de Crédito' },
                 { id: 'Débito', icon: <Smartphone size={20} />, label: 'Cartão de Débito' },
-              ].map(method => (
-                <button
-                  key={method.id}
-                  type="button"
-                  onClick={() => setFormData({ ...formData, paymentMethod: method.id })}
-                  className={`w-full flex items-center gap-4 p-5 rounded-3xl border-2 transition ${formData.paymentMethod === method.id ? 'bg-red-600/10 border-red-600 text-white' : 'bg-black border-zinc-800 text-zinc-500 hover:border-zinc-700'}`}
-                >
-                  <div className={formData.paymentMethod === method.id ? 'text-red-500' : ''}>{method.icon}</div>
-                  <span className="font-bold uppercase">{method.label}</span>
-                </button>
-              ))}
+                { id: 'Vale-Refeição', icon: <Ticket size={20} />, label: 'Vale-Refeição' },
+              ].map(method => {
+                
+                // AJUSTE: Lógica inteligente para manter o botão "Vale-Refeição" ativado e vermelhinho, 
+                // mesmo depois que a pessoa selecionar a bandeira (ex: 'Vale-Refeição - LeCard')
+                const isActive = formData.paymentMethod === method.id || 
+                               (method.id === 'Vale-Refeição' && formData.paymentMethod.startsWith('Vale-Refeição'));
+                               
+                return (
+                  <button
+                    key={method.id}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, paymentMethod: method.id })}
+                    className={`w-full flex items-center gap-4 p-5 rounded-3xl border-2 transition ${isActive ? 'bg-red-600/10 border-red-600 text-white' : 'bg-black border-zinc-800 text-zinc-500 hover:border-zinc-700'}`}
+                  >
+                    <div className={isActive ? 'text-red-500' : ''}>{method.icon}</div>
+                    <span className="font-bold uppercase">{method.label}</span>
+                  </button>
+                );
+              })}
+
+              {/* --- AJUSTE CIRÚRGICO: NOVO SUB-MENU DO VALE-REFEIÇÃO --- */}
+              {formData.paymentMethod.startsWith('Vale-Refeição') && (
+                <div className="mt-2 mb-6 p-5 rounded-3xl border border-zinc-800 bg-black/50 animate-in fade-in slide-in-from-top-2">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 block text-center">
+                    Selecione a Bandeira
+                  </label>
+                  <div className="grid grid-cols-1 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, paymentMethod: 'Vale-Refeição - LeCard' })}
+                      className={`w-full p-4 rounded-2xl border-2 transition flex justify-center items-center gap-2 font-black uppercase tracking-widest text-sm ${
+                        formData.paymentMethod === 'Vale-Refeição - LeCard'
+                          ? 'border-red-600 bg-red-600 text-white shadow-lg shadow-red-600/20'
+                          : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:text-white'
+                      }`}
+                    >
+                      LeCard
+                    </button>
+                    {/* Quando você for adicionar outras bandeiras no futuro (Sodexo, VR, Ticket...), 
+                        basta copiar e colar este botão de cima aqui embaixo alterando o nome! */}
+                  </div>
+                </div>
+              )}
 
               {formData.paymentMethod === 'Dinheiro' && (
                 <div className="mt-6 animate-in fade-in slide-in-from-top-2">

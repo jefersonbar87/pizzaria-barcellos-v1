@@ -39,10 +39,16 @@ const TIDA_FAQ: TidaFAQItem[] = [
   {
     keywords: ['maionese', 'caseira', 'molho', 'maionese verde', 'molho verde'],
     answer: 'Siiim! 😋 Toda pizza vai acompanhada da nossa deliciosa maionese caseira temperada. É sucesso absoluto por aqui!'
-  }
-];
+  }, // <--- COLOQUE ESSA VÍRGULA AQUI SE ELA NÃO ESTIVER!
 
-const TidaChat = () => {
+  // 🌟 NOVO 5: Ticket / Vale Refeição (Lecard)
+  {
+    keywords: ['ticket', 'vale refeição', 'vale-refeição', 'vale alimentação', 'vr', 'va', 'alelo', 'sodexo', 'ticket restaurante', 'lecard', 'vale'],
+    answer: 'Siiim! Aceitamos vale, mas no momento estamos trabalhando apenas com a bandeira Lecard, tá bom? 🥰'
+  }
+  ];
+
+  const TidaChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [isIconVisible, setIsIconVisible] = useState(true); 

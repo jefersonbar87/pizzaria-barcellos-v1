@@ -401,6 +401,16 @@ export const INITIAL_PRODUCTS: Product[] = [
     stock: 10,
   },
   {
+    id: 'oy41mu42y',
+    name: 'REFRIGERANTE COCA COLA ZERO 2L',
+    description: 'Refrigerante 2L gelado',
+    priceFixed: 15.00,
+    category: 'Bebida',
+    image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cocazero.jpg',
+    available: true,
+    stock: 10,
+  },
+  {
     id: 'ab41mss9y',
     name: 'REFRIGERANTE COCA COLA 1,5L',
     description: 'Refrigerante 1,5L gelado',
@@ -517,7 +527,7 @@ export const INITIAL_PRODUCTS: Product[] = [
 // Mude para 'auto' para o robô abrir sozinho no horário
 // Mude para 'open' para forçar o site a ficar ABERTO
 // Mude para 'closed' para forçar o site a ficar FECHADO
-const MANUAL_CONTROL = 'auto' as 'auto' | 'open' | 'closed'; // AQUI VOCE ABRE E FECHA A PAGINA
+const MANUAL_CONTROL = 'open' as 'auto' | 'open' | 'closed'; // AQUI VOCE ABRE E FECHA A PAGINA
 
 // 2. Lógica de horário automática
 const checkAutomaticOpening = () => {
@@ -554,8 +564,8 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
 
 export const INITIAL_SETTINGS: AppSettings = {
   // --- CONFIGURAÇÃO DO CARTAZ  ---
-  showAdCartaz: false, // ADICIONA OU TIRA O CARTAZ
-  adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaztidachat.avif', // Link da imagem hospedada na Oracle Cloud
+  showAdCartaz: true, // ADICIONA OU TIRA O CARTAZ
+  adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/lecardcartaz.avif', // Link da imagem hospedada na Oracle Cloud
   // ----------------------------------------------
   isOpen: MANUAL_CONTROL === 'open' ? true :
     MANUAL_CONTROL === 'closed' ? false :
@@ -610,15 +620,15 @@ export const INITIAL_SETTINGS: AppSettings = {
       id: 'infor-1', // Entre aspas para ser uma string
       active: true, // AQUI VC ATIVA E DESATIVA
       isClickable: false, // AQUI VC ATIVA O VALOR
-      title: '5 NOVOS SABORES',
-      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cincosabores.avif', // Link da imagem que criamos
+      title: 'Cartão LeCard',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaolecard.avif', // Link da imagem que criamos
       price: 129.90,
       freeDelivery: false, // SELO DE ENTREGA GRATIS
       description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
     },
     {
       id: 'infor-2', // Entre aspas para ser uma string
-      active: true, // AQUI VC ATIVA E DESATIVA
+      active: false, // AQUI VC ATIVA E DESATIVA
       isClickable: false, // AQUI VC ATIVA O VALOR
       title: 'PIZZA DE CAMARÃO',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazcamarao.avif', // Link da imagem que criamos
@@ -628,7 +638,7 @@ export const INITIAL_SETTINGS: AppSettings = {
     },
     {
       id: 'infor-3', // Entre aspas para ser uma string
-      active: true, // AQUI VC ATIVA E DESATIVA
+      active: false, // AQUI VC ATIVA E DESATIVA
       isClickable: false, // AQUI VC ATIVA O VALOR
       title: 'PIZZA CAMARAO CREMOSO',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazcamaraocremoso.avif', // Link da imagem que criamos
@@ -638,7 +648,7 @@ export const INITIAL_SETTINGS: AppSettings = {
     },
     {
       id: 'infor-4', // Entre aspas para ser uma string
-      active: true, // AQUI VC ATIVA E DESATIVA
+      active: false, // AQUI VC ATIVA E DESATIVA
       isClickable: false, // AQUI VC ATIVA O VALOR
       title: 'PIZZA ITALIANA',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazitaliana.avif', // Link da imagem que criamos
@@ -648,7 +658,7 @@ export const INITIAL_SETTINGS: AppSettings = {
     },
     {
       id: 'infor-5', // Entre aspas para ser uma string
-      active: true, // AQUI VC ATIVA E DESATIVA
+      active: false, // AQUI VC ATIVA E DESATIVA
       isClickable: false, // AQUI VC ATIVA O VALOR
       title: 'PIZZA SABOROSA',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazsaborosa.avif', // Link da imagem que criamos
@@ -658,7 +668,7 @@ export const INITIAL_SETTINGS: AppSettings = {
     },
     {
       id: 'infor-6', // Entre aspas para ser uma string
-      active: true, // AQUI VC ATIVA E DESATIVA
+      active: false, // AQUI VC ATIVA E DESATIVA
       isClickable: false, // AQUI VC ATIVA O VALOR
       title: 'PIZZA PEPPERONI',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartazpepperoni.avif', // Link da imagem que criamos
