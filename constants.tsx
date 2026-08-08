@@ -527,7 +527,7 @@ export const INITIAL_PRODUCTS: Product[] = [
 // Mude para 'auto' para o robô abrir sozinho no horário
 // Mude para 'open' para forçar o site a ficar ABERTO
 // Mude para 'closed' para forçar o site a ficar FECHADO
-const MANUAL_CONTROL = 'open' as 'auto' | 'open' | 'closed'; // AQUI VOCE ABRE E FECHA A PAGINA
+const MANUAL_CONTROL = 'auto' as 'auto' | 'open' | 'closed'; // AQUI VOCE ABRE E FECHA A PAGINA
 
 // 2. Lógica de horário automática
 const checkAutomaticOpening = () => {
@@ -684,7 +684,7 @@ export const INITIAL_SETTINGS: AppSettings = {
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaz1.avif', // Link da imagem que criamos
       price: 129.90,
       freeDelivery: false, // SELO DE ENTREGA GRATIS
-      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'
+      description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 22 GRÁTIS!'
     }
   ],
 
