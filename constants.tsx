@@ -564,7 +564,7 @@ export const INITIAL_NEIGHBORHOODS: Neighborhood[] = [
 
 export const INITIAL_SETTINGS: AppSettings = {
   // --- CONFIGURAÇÃO DO CARTAZ  ---
-  showAdCartaz: true, // ADICIONA OU TIRA O CARTAZ
+  showAdCartaz: false, // ADICIONA OU TIRA O CARTAZ
   adCartazLink: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/lecardcartaz.avif', // Link da imagem hospedada na Oracle Cloud
   // ----------------------------------------------
   isOpen: MANUAL_CONTROL === 'open' ? true :
@@ -572,7 +572,7 @@ export const INITIAL_SETTINGS: AppSettings = {
       checkAutomaticOpening(),
 
   closedMode: 'hide-menu',
-  closeMessage: 'NESTE MOMENTO ESTAMOS FECHADOS MAS PODE AGENDAR O SEU PEDIDO.',
+  closeMessage: 'ATENÇÃO! NOS DIAS 20 E 28 DE AGOSTO, NÃO TEREMOS ATENDIMENTO.',
   neighborhoods: INITIAL_NEIGHBORHOODS,
   blockedNeighborhoods: 'Bagueira, Rio Quartel, Guaxe, Povoação, Bebedouro, Residencial Rio Doce, Bairro Perigoso, Invasão, Pontal do Ipiranga, Regência',
   defaultDeliveryFee: 4,
@@ -683,7 +683,7 @@ export const INITIAL_SETTINGS: AppSettings = {
       title: 'TAMANHOS DAS PIZZAS',
       image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartaz1.avif', // Link da imagem que criamos
       price: 129.90,
-      freeDelivery: false, // SELO DE ENTREGA GRATIS
+      freeDelivery: false, // SELO DE ENTREGA GRATIS      
       description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 22 GRÁTIS!'
     }
   ],
