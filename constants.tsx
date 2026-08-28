@@ -527,7 +527,7 @@ export const INITIAL_PRODUCTS: Product[] = [
 // Mude para 'auto' para o robô abrir sozinho no horário
 // Mude para 'open' para forçar o site a ficar ABERTO
 // Mude para 'closed' para forçar o site a ficar FECHADO
-const MANUAL_CONTROL = 'auto' as 'auto' | 'open' | 'closed'; // AQUI VOCE ABRE E FECHA A PAGINA
+const MANUAL_CONTROL = 'closed' as 'auto' | 'open' | 'closed'; // AQUI VOCE ABRE E FECHA A PAGINA
 
 // 2. Lógica de horário automática
 const checkAutomaticOpening = () => {
