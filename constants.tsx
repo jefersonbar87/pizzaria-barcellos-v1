@@ -428,7 +428,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cocazero.jpg',
     available: true,
-    stock: 0,
+    stock: 10,
   },
   {
     id: '6oglq4b39',
@@ -610,8 +610,8 @@ export const INITIAL_SETTINGS: AppSettings = {
       id: 'infor-0', // Entre aspas para ser uma string
       active: true, // AQUI VC ATIVA E DESATIVA
       isClickable: false, // AQUI VC ATIVA O VALOR
-      title: 'Informativo TidaChat',
-      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/informativotidachat.avif', // Link da imagem que criamos
+      title: 'Informativo VR',
+      image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/infor_vr.avif', // Link da imagem que criamos
       price: 129.90,
       freeDelivery: false, // SELO DE ENTREGA GRATIS
       description: 'Aqui você leva 12 pedaços + 1 Coroa Sabores 2L GRÁTIS!'

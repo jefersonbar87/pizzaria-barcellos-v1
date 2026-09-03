@@ -537,28 +537,41 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
               })}
 
               {/* --- AJUSTE CIRÚRGICO: NOVO SUB-MENU DO VALE-REFEIÇÃO --- */}
-              {formData.paymentMethod.startsWith('Vale-Refeição') && (
-                <div className="mt-2 mb-6 p-5 rounded-3xl border border-zinc-800 bg-black/50 animate-in fade-in slide-in-from-top-2">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 block text-center">
-                    Selecione a Bandeira
-                  </label>
-                  <div className="grid grid-cols-1 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, paymentMethod: 'Vale-Refeição - LeCard' })}
-                      className={`w-full p-4 rounded-2xl border-2 transition flex justify-center items-center gap-2 font-black uppercase tracking-widest text-sm ${
-                        formData.paymentMethod === 'Vale-Refeição - LeCard'
-                          ? 'border-red-600 bg-red-600 text-white shadow-lg shadow-red-600/20'
-                          : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:text-white'
-                      }`}
-                    >
-                      LeCard
-                    </button>
-                    {/* Quando você for adicionar outras bandeiras no futuro (Sodexo, VR, Ticket...), 
-                        basta copiar e colar este botão de cima aqui embaixo alterando o nome! */}
-                  </div>
-                </div>
-              )}
+{formData.paymentMethod.startsWith('Vale-Refeição') && (
+  <div className="mt-2 mb-6 p-5 rounded-3xl border border-zinc-800 bg-black/50 animate-in fade-in slide-in-from-top-2">
+    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 block text-center">
+      Selecione a Bandeira
+    </label>
+    <div className="grid grid-cols-1 gap-3">
+      <button
+        type="button"
+        onClick={() => setFormData({ ...formData, paymentMethod: 'Vale-Refeição - LeCard' })}
+        className={`w-full p-4 rounded-2xl border-2 transition flex justify-center items-center gap-2 font-black uppercase tracking-widest text-sm ${
+          formData.paymentMethod === 'Vale-Refeição - LeCard'
+            ? 'border-red-600 bg-red-600 text-white shadow-lg shadow-red-600/20'
+            : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:text-white'
+        }`}
+      >
+        LeCard
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setFormData({ ...formData, paymentMethod: 'Vale-Refeição - VR' })}
+        className={`w-full p-4 rounded-2xl border-2 transition flex justify-center items-center gap-2 font-black uppercase tracking-widest text-sm ${
+          formData.paymentMethod === 'Vale-Refeição - VR'
+            ? 'border-red-600 bg-red-600 text-white shadow-lg shadow-red-600/20'
+            : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:text-white'
+        }`}
+      >
+        VR
+      </button>
+      
+      {/* Quando você for adicionar outras bandeiras no futuro (Sodexo, Ticket...), 
+          basta copiar e colar este botão de cima aqui embaixo alterando o nome! */}
+    </div>
+  </div>
+)}
 
               {formData.paymentMethod === 'Dinheiro' && (
                 <div className="mt-6 animate-in fade-in slide-in-from-top-2">
