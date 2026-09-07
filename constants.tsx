@@ -572,7 +572,7 @@ export const INITIAL_SETTINGS: AppSettings = {
       checkAutomaticOpening(),
 
   closedMode: 'hide-menu',
-  closeMessage: 'ATENÇÃO! NOS DIAS 20 E 28 DE AGOSTO, NÃO TEREMOS ATENDIMENTO.',
+  closeMessage: 'Olá cliente, nesse momento estamos fechados devido ao horário, mas você pode agendar seu pedido no botão de agendamento logo acima!.',
   neighborhoods: INITIAL_NEIGHBORHOODS,
   blockedNeighborhoods: 'Bagueira, Rio Quartel, Guaxe, Povoação, Bebedouro, Residencial Rio Doce, Bairro Perigoso, Invasão, Pontal do Ipiranga, Regência',
   defaultDeliveryFee: 4,

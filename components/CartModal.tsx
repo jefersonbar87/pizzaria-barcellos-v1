@@ -21,6 +21,9 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   const [showManualButton, setShowManualButton] = useState(false);
   const [deliveryMessage, setDeliveryMessage] = useState<string | null>(null);
   const [isBlocked, setIsBlocked] = useState(false);
+  
+  // --- AJUSTE CIRÚRGICO: ESTADO DO NOVO MODAL ---
+  const [showPaymentAlert, setShowPaymentAlert] = useState(false);
 
   const [addressData, setAddressData] = useState({
     cep: '',
@@ -206,6 +209,13 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   };
 
   const handleFinalize = async () => {
+    // --- AJUSTE CIRÚRGICO: ATIVA O MODAL SE A BANDEIRA NÃO FOR ESCOLHIDA ---
+    if (formData.paymentMethod === 'Vale-Refeição') {
+      setShowPaymentAlert(true);
+      return; 
+    }
+    // ------------------------------------------------------------------------
+
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
@@ -537,41 +547,41 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
               })}
 
               {/* --- AJUSTE CIRÚRGICO: NOVO SUB-MENU DO VALE-REFEIÇÃO --- */}
-{formData.paymentMethod.startsWith('Vale-Refeição') && (
-  <div className="mt-2 mb-6 p-5 rounded-3xl border border-zinc-800 bg-black/50 animate-in fade-in slide-in-from-top-2">
-    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 block text-center">
-      Selecione a Bandeira
-    </label>
-    <div className="grid grid-cols-1 gap-3">
-      <button
-        type="button"
-        onClick={() => setFormData({ ...formData, paymentMethod: 'Vale-Refeição - LeCard' })}
-        className={`w-full p-4 rounded-2xl border-2 transition flex justify-center items-center gap-2 font-black uppercase tracking-widest text-sm ${
-          formData.paymentMethod === 'Vale-Refeição - LeCard'
-            ? 'border-red-600 bg-red-600 text-white shadow-lg shadow-red-600/20'
-            : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:text-white'
-        }`}
-      >
-        LeCard
-      </button>
+              {formData.paymentMethod.startsWith('Vale-Refeição') && (
+                <div className="mt-2 mb-6 p-5 rounded-3xl border border-zinc-800 bg-black/50 animate-in fade-in slide-in-from-top-2">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 block text-center">
+                    Selecione a Bandeira
+                  </label>
+                  <div className="grid grid-cols-1 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, paymentMethod: 'Vale-Refeição - LeCard' })}
+                      className={`w-full p-4 rounded-2xl border-2 transition flex justify-center items-center gap-2 font-black uppercase tracking-widest text-sm ${
+                        formData.paymentMethod === 'Vale-Refeição - LeCard'
+                          ? 'border-red-600 bg-red-600 text-white shadow-lg shadow-red-600/20'
+                          : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:text-white'
+                      }`}
+                    >
+                      LeCard
+                    </button>
 
-      <button
-        type="button"
-        onClick={() => setFormData({ ...formData, paymentMethod: 'Vale-Refeição - VR' })}
-        className={`w-full p-4 rounded-2xl border-2 transition flex justify-center items-center gap-2 font-black uppercase tracking-widest text-sm ${
-          formData.paymentMethod === 'Vale-Refeição - VR'
-            ? 'border-red-600 bg-red-600 text-white shadow-lg shadow-red-600/20'
-            : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:text-white'
-        }`}
-      >
-        VR
-      </button>
-      
-      {/* Quando você for adicionar outras bandeiras no futuro (Sodexo, Ticket...), 
-          basta copiar e colar este botão de cima aqui embaixo alterando o nome! */}
-    </div>
-  </div>
-)}
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, paymentMethod: 'Vale-Refeição - VR' })}
+                      className={`w-full p-4 rounded-2xl border-2 transition flex justify-center items-center gap-2 font-black uppercase tracking-widest text-sm ${
+                        formData.paymentMethod === 'Vale-Refeição - VR'
+                          ? 'border-red-600 bg-red-600 text-white shadow-lg shadow-red-600/20'
+                          : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:text-white'
+                      }`}
+                    >
+                      VR
+                    </button>
+                    
+                    {/* Quando você for adicionar outras bandeiras no futuro (Sodexo, Ticket...), 
+                        basta copiar e colar este botão de cima aqui embaixo alterando o nome! */}
+                  </div>
+                </div>
+              )}
 
               {formData.paymentMethod === 'Dinheiro' && (
                 <div className="mt-6 animate-in fade-in slide-in-from-top-2">
@@ -637,6 +647,31 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
           </div>
         </footer>
       </div>
+
+      {/* --- AJUSTE CIRÚRGICO: MODAL DE ALERTA DO VALE-REFEIÇÃO --- */}
+      {showPaymentAlert && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-md p-6">
+          <div className="w-full max-w-sm bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8 text-center animate-in zoom-in-95 duration-300 shadow-2xl shadow-red-600/10">
+            <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-5 border border-red-500/20">
+              <AlertCircle size={32} className="text-red-500" />
+            </div>
+            <h3 className="text-xl font-black uppercase tracking-tighter text-white mb-3">
+              Atenção
+            </h3>
+            <p className="text-zinc-400 text-sm leading-relaxed mb-8 font-medium">
+              Por favor, selecione a bandeira do seu Vale-Refeição para prosseguir.
+            </p>
+            <button
+              onClick={() => setShowPaymentAlert(false)}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 rounded-2xl transition shadow-xl shadow-red-600/20 uppercase tracking-widest text-xs"
+            >
+              Entendi
+            </button>
+          </div>
+        </div>
+      )}
+      {/* ---------------------------------------------------------- */}
+
     </div>
   );
 };
