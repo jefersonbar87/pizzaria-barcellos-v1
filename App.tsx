@@ -453,15 +453,15 @@ const App: React.FC = () => {
             </div>
           </div>
           <div className="pt-8 border-t border-zinc-800/50 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">
-              © 2026 PIZZARIA BARCELLOS - MARCA REGISTRADA
-            </p>
-            <p className="text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">
-              DESENVOLVIDO POR <span className="text-zinc-400">JEFTECNOLOGIAS</span>
-            </p>
-          </div>
-        </div>
-      </footer>
+  <p className="text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">
+    © 2026 PIZZARIA BARCELLOS - MARCA REGISTRADA
+  </p>
+  <p className="text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">
+    DESENVOLVIDO POR <a href="https://jeftcnologias.pages.dev" target="_blank" rel="noopener noreferrer" className="text-zinc-400">JEFTECNOLOGIAS</a>
+  </p>
+</div>
+</div>
+</footer>
 
       {/* MODAL DE AGENDAMENTO CUSTOMIZADO */}
       {isSchedulingModalOpen && (
