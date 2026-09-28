@@ -451,6 +451,17 @@ const App: React.FC = () => {
                 </a>
               </div>
             </div>
+
+            <div className="space-y-4">
+              <h5 className="text-red-600 font-black text-[10px] uppercase tracking-[0.3em]">Formas de Pagamento</h5>
+              <div className="flex justify-center md:justify-start">
+                <img 
+                  src="https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cartoes.jpeg" 
+                  alt="Formas de Pagamento" 
+                  className="w-64 md:w-72 h-auto object-contain rounded-md"
+                />
+              </div>
+            </div>
           </div>
           <div className="pt-8 border-t border-zinc-800/50 flex flex-col md:flex-row justify-between items-center gap-4">
   <p className="text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">

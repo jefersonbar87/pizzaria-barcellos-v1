@@ -398,7 +398,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola.png',
     available: true,
-    stock: 10,
+    stock: 0,
   },
   {
     id: 'oy41mu42y',
@@ -418,7 +418,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola1,5l.avif',
     available: true,
-    stock: 10,
+    stock: 0,
   },
   {
     id: 'cy41muz9y',
