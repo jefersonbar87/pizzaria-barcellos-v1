@@ -485,7 +485,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     id: 'gjnroknsq',
     name: 'REFRIGERANTE GUARANÁ ANTARCTICA 1L',
     description: 'Refrigerante 1 Litro gelado',
-    priceFixed: 15,
+    priceFixed: 11.50,
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/guaranaantartida1L.avif',
     available: true,
