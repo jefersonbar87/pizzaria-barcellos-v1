@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { CartItem, Neighborhood, Order, AppSettings } from '../types';
-// AJUSTE: Adicionado o ícone 'Ticket' no final da lista de importações
 import { Trash2, ArrowLeft, ArrowRight, ChevronRight, CreditCard, Banknote, Landmark, Smartphone, Loader2, MapPin, AlertCircle, ShoppingBag, Truck, Check, Ticket } from 'lucide-react';
 
 interface CartModalProps {
@@ -15,15 +14,17 @@ interface CartModalProps {
 const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove, settings, onSubmit }) => {
   const [step, setStep] = useState(1);
   const [loadingCep, setLoadingCep] = useState(false);
-  const [loadingLocation, setLoadingLocation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showManualButton, setShowManualButton] = useState(false);
   const [deliveryMessage, setDeliveryMessage] = useState<string | null>(null);
   const [isBlocked, setIsBlocked] = useState(false);
   
-  // --- AJUSTE CIRÚRGICO: ESTADO DO NOVO MODAL ---
   const [showPaymentAlert, setShowPaymentAlert] = useState(false);
+  
+  // --- ESTADOS PARA A NOVA MODAL DE ALERTA ---
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
   const [addressData, setAddressData] = useState({
     cep: '',
@@ -62,57 +63,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPhone(e.target.value);
     setFormData({ ...formData, phone: formatted });
-  };
-
-  const handleGetLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Seu navegador não suporta localização.");
-      return;
-    }
-
-    setLoadingLocation(true);
-
-    const geoOptions = {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0
-    };
-
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      try {
-        const { latitude, longitude } = position.coords;
-
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
-        );
-        const data = await response.json();
-
-        if (data.address) {
-          const cepEncontrado = data.address.postcode ? data.address.postcode.replace(/\D/g, '') : '';
-
-          if (cepEncontrado) {
-            setAddressData(prev => ({
-              ...prev,
-              street: data.address.road || data.address.pedestrian || prev.street,
-              bairro: data.address.suburb || data.address.neighbourhood || prev.bairro,
-              city: data.address.city || data.address.town || prev.city
-            }));
-
-            handleCepLookup(cepEncontrado);
-          } else {
-            alert("CEP não identificado nesta posição. Por favor, digite manualmente.");
-          }
-        }
-      } catch (error) {
-        alert("Erro ao identificar endereço. Tente o CEP manualmente.");
-      } finally {
-        setLoadingLocation(false);
-      }
-    }, (error) => {
-      if (error.code === 1) alert("Por favor, autorize a localização no seu navegador.");
-      else alert("Não conseguimos captar seu sinal de GPS. Digite o CEP.");
-      setLoadingLocation(false);
-    }, geoOptions);
   };
 
   const handleCepLookup = async (cep: string) => {
@@ -192,14 +142,22 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   const handleNext = () => {
     if (step === 1 && items.length === 0) return;
     if (step === 2) {
-      const isAddressOk = formData.orderType === 'No Balcão' || (addressData.cep && addressData.number);
+      const isAddressOk = formData.orderType === 'No Balcão' || 
+                          (addressData.cep && addressData.cep.length === 8 && addressData.street !== '' && addressData.number);
 
       if (!formData.customerName || !formData.phone || !isAddressOk) {
-        alert('Preencha os campos obrigatórios para prosseguir.');
+        // Dispara a nova modal customizada em vez do alert() padrão
+        if (formData.orderType === 'Entrega' && (!addressData.cep || addressData.cep.length !== 8)) {
+          setAlertMessage('Por favor digite o CEP corretamente. (8 dígitos)');
+        } else {
+          setAlertMessage('Preencha os campos obrigatórios corretamente para prosseguir.');
+        }
+        setShowAlert(true);
         return;
       }
       if (formData.orderType === 'Entrega' && isBlocked) {
-        alert('Não podemos prosseguir com a entrega para este endereço. Selecione "No Balcão" para retirar seu pedido.');
+        setAlertMessage('Não podemos prosseguir com a entrega para este endereço. Selecione "No Balcão" para retirar seu pedido.');
+        setShowAlert(true);
         return;
       }
       setStep(3);
@@ -209,12 +167,10 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
   };
 
   const handleFinalize = async () => {
-    // --- AJUSTE CIRÚRGICO: ATIVA O MODAL SE A BANDEIRA NÃO FOR ESCOLHIDA ---
     if (formData.paymentMethod === 'Vale-Refeição') {
       setShowPaymentAlert(true);
       return; 
     }
-    // ------------------------------------------------------------------------
 
     if (isSubmitting) return;
     setIsSubmitting(true);
@@ -293,7 +249,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
             </button>
 
             <h2 className="text-xl font-black uppercase tracking-tighter">
-              {step === 1 ? 'Seu Carrinho' : step === 2 ? 'Dados do Pedido' : 'Pagamento'}
+              {step === 1 ? 'Seu Carrinho' : step === 2 ? 'Dados do Cliente' : 'Pagamento'}
             </h2>
           </div>
         </header>
@@ -453,7 +409,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
-                      <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">1. Digite seu CEP</label>
+                      <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Digite seu CEP</label>
                       <div className="relative">
                         <input
                           type="text"
@@ -464,28 +420,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                           placeholder="00000000"
                         />
                         {loadingCep && <Loader2 className="absolute right-4 top-4 animate-spin text-red-600" />}
-                      </div>
-
-                      <div className="mt-4 flex flex-col items-center">
-                        <div className="flex items-center gap-3 w-full mb-3 px-2">
-                          <div className="h-px flex-grow bg-zinc-800"></div>
-                          <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">Ou se não souber</span>
-                          <div className="h-px flex-grow bg-zinc-800"></div>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={handleGetLocation}
-                          disabled={loadingLocation || loadingCep}
-                          className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl border border-dashed border-zinc-800 bg-zinc-900/30 hover:border-red-600 hover:bg-red-600/5 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all active:scale-95"
-                        >
-                          {loadingLocation ? (
-                            <Loader2 className="animate-spin text-red-600" size={14} />
-                          ) : (
-                            <MapPin size={14} className="text-red-600" />
-                          )}
-                          {loadingLocation ? "Localizando..." : "2. Pedir pela minha localização atual"}
-                        </button>
                       </div>
                     </div>
 
@@ -499,6 +433,11 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                     <div className="col-span-2">
                       <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Rua / Logradouro</label>
                       <input type="text" value={addressData.street} readOnly className="w-full bg-zinc-800/30 border border-zinc-800 p-4 rounded-2xl outline-none text-zinc-400" />
+                    </div>
+
+                    <div className="col-span-2">
+                      <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Bairro</label>
+                      <input type="text" value={addressData.bairro} readOnly className="w-full bg-zinc-800/30 border border-zinc-800 p-4 rounded-2xl outline-none text-zinc-400" />
                     </div>
 
                     <div>
@@ -519,7 +458,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
             <div className="space-y-4">
               <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Escolha o Meio de Pagamento</label>
               
-              {/* AJUSTE: Adicionado a opção Vale-Refeição no mapeamento */}
               {[
                 { id: 'PIX', icon: <Landmark size={20} />, label: 'PIX (Instantâneo)' },
                 { id: 'Dinheiro', icon: <Banknote size={20} />, label: 'Dinheiro' },
@@ -528,8 +466,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                 { id: 'Vale-Refeição', icon: <Ticket size={20} />, label: 'Vale-Refeição' },
               ].map(method => {
                 
-                // AJUSTE: Lógica inteligente para manter o botão "Vale-Refeição" ativado e vermelhinho, 
-                // mesmo depois que a pessoa selecionar a bandeira (ex: 'Vale-Refeição - LeCard')
                 const isActive = formData.paymentMethod === method.id || 
                                (method.id === 'Vale-Refeição' && formData.paymentMethod.startsWith('Vale-Refeição'));
                                
@@ -546,7 +482,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                 );
               })}
 
-              {/* --- AJUSTE CIRÚRGICO: NOVO SUB-MENU DO VALE-REFEIÇÃO --- */}
               {formData.paymentMethod.startsWith('Vale-Refeição') && (
                 <div className="mt-2 mb-6 p-5 rounded-3xl border border-zinc-800 bg-black/50 animate-in fade-in slide-in-from-top-2">
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 block text-center">
@@ -577,8 +512,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
                       VR
                     </button>
                     
-                    {/* Quando você for adicionar outras bandeiras no futuro (Sodexo, Ticket...), 
-                        basta copiar e colar este botão de cima aqui embaixo alterando o nome! */}
                   </div>
                 </div>
               )}
@@ -648,7 +581,6 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
         </footer>
       </div>
 
-      {/* --- AJUSTE CIRÚRGICO: MODAL DE ALERTA DO VALE-REFEIÇÃO --- */}
       {showPaymentAlert && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-md p-6">
           <div className="w-full max-w-sm bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8 text-center animate-in zoom-in-95 duration-300 shadow-2xl shadow-red-600/10">
@@ -670,7 +602,29 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items, onRemove,
           </div>
         </div>
       )}
-      {/* ---------------------------------------------------------- */}
+
+      {/* --- NOVA MODAL PARA OS ALERTAS GERAIS E CEP --- */}
+      {showAlert && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-md p-6">
+          <div className="w-full max-w-sm bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8 text-center animate-in zoom-in-95 duration-300 shadow-2xl shadow-red-600/10">
+            <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-5 border border-red-500/20">
+              <AlertCircle size={32} className="text-red-500" />
+            </div>
+            <h3 className="text-xl font-black uppercase tracking-tighter text-white mb-3">
+              Atenção
+            </h3>
+            <p className="text-zinc-400 text-sm leading-relaxed mb-8 font-medium">
+              {alertMessage}
+            </p>
+            <button
+              onClick={() => setShowAlert(false)}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 rounded-2xl transition shadow-xl shadow-red-600/20 uppercase tracking-widest text-xs"
+            >
+              Entendi
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   );
