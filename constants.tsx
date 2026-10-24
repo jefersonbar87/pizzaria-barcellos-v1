@@ -509,7 +509,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/Coroa-Guarana.png',
     available: true,
-    stock: 10,
+    stock: 0,
   },
   {
     id: 'pilarlssq',
