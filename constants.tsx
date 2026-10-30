@@ -459,7 +459,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/coca-cola-600ml.png',
     available: true,
-    stock: 10,
+    stock: 0,
   },
   {
     id: '6owerMAP39',
@@ -469,7 +469,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/cocacola600mlzero.avif',
     available: true,
-    stock: 10,
+    stock: 0,
   },
   {
     id: 'gelarknsq',
@@ -509,7 +509,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'Bebida',
     image: 'https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grodnkjmhsk8/b/fotos-pizzaria/o/Coroa-Guarana.png',
     available: true,
-    stock: 0,
+    stock: 10,
   },
   {
     id: 'pilarlssq',
